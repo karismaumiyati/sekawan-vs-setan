@@ -1,0 +1,149 @@
+// --- DATA KARAKTER ---
+        const characters = {
+            komang: {
+                name: "Komang",
+                desc: "Kamu tipe orang yang selalu mikirin perasaan orang lain duluan. Rendah hati, sabar, dan hampir nggak pernah bikin suasana panas. Kadang terlalu baik sampai lupa sama diri sendiri",
+                traits: [
+                    "Perhatian sampai kadang lupa sama diri sendiri",
+                    "Anti ngomong enggak alias people pleaser",
+                    "Rendah hati dan ga suka pamer",
+                    "Sabar ngadepin apa aja masalahnya",
+                    "Baik tanpa banyak drama"
+                ],
+                matches: "Johan",
+                mismatches: "Yosef",
+                imgSeed: "Felix" 
+            },
+            feng: {
+                name: "Feng",
+                desc: "Percaya diri, tegas, dan punya aura pemimpin. Kamu tau apa yang kamu mau dengan prinsip yang kuat.",
+                traits: [
+                    "Punya jiwa percaya diri yang too much",
+                    "Jiwa pemimpinnya ngalahin presiden",
+                    "Manchester United garis keras",
+                    "Tegas dan jujur"
+                ],
+                matches: "Yusuf",
+                mismatches: "Johan",
+                imgSeed: "Aneka"
+            },
+            yusuf: {
+                name: "Yusuf",
+                desc: "Kalau bisa mudah kenapa harus dibuat ribet adalah prinsip yang kamu pegang. Untuk menjaga suasana tetap damai kamu akan bertindak realistis, ngalah.",
+                traits: [
+                    "Skeptis tapi masih logis?",
+                    "Suka banget mendam perasaan",
+                    "Simple aja gamau dibuat ribet",
+                    "Ngalahan jadi orang"
+                ],
+                matches: "Feng",
+                mismatches: "Yosef",
+                imgSeed: "Brian"
+            },
+            yosef: {
+                name: "Yosef",
+                desc: "Nama tengahmu adalah 'Chaos'. Kamu suka hal baru, nekat, dan selalu punya ide gila yang bikin tongkrongan jadi pecah. Tanpamu, rasanya ada yang kurang.",
+                traits: [
+                    "Jahil ga kenal waktu",
+                    "Semua orang juga kamu kenal, extrovert parah",
+                    "Kreatif kalau soal ide gila",
+                    "Sipaling gas apapun kondisinya"
+                ],
+                matches: "Feng",
+                mismatches: "Komang",
+                imgSeed: "Christopher"
+            },
+            johan: {
+                name: "Johan",
+                desc: "Kamu penakut tapi tulus, lugu, penurut, dan berhati lembut. Fix anak bungsunya tongkrongan. Lebih suka jadi penonton daripada jadi pemeran utama.",
+                traits: [
+                    "Ga enakan banget jadi orang",
+                    "Penakut tapi baik",
+                    "Lebih sayang binatang daripada diri sendiri",
+                    "Dor dor! Pecinta film action",
+                    "Polos dan paling lugu"
+                ],
+                matches: "Komang",
+                mismatches: "Feng",
+                imgSeed: "Trouble"
+            }
+        };
+
+
+// --- DATA PERTANYAAN ---
+        const questions = [
+            {
+                q: "Pas lagi bokek parah di akhir bulan, kamu tipe yang..",
+                options: [
+                    { text: "Masak mie instan sebungkus, airnya dibanyakin biar kenyang", points: ["komang", "johan", "yusuf"] },
+                    { text: "Cari pinjaman ke teman atau nekat makan dulu bayar belakangan", points: ["feng", "yosef"] }
+                ]
+            },
+            {
+                q: "Melihat tumpukan baju kotor di pojok kamar yang sudah mulai bau..",
+                options: [
+                    { text: "Langsung nyuci hari itu juga", points: ["feng", "komang"] },
+                    { text: "Tunggu sampai stok baju bersih habis", points: ["yusuf", "yosef", "johan"] }
+                ]
+            },
+            {
+                q: "Kalau lagi ada teman-teman kos ngumpul di ruang tengah kamu bakal.. ",
+                options: [
+                    { text: "Ikut nimbrung", points: ["yosef", "feng"] },
+                    { text: "Nyapa bentar terus balik ke kamar", points: ["yusuf", "komang", "johan"] }
+                ]
+            },
+            {
+                q: "Kalau mau keluar kamar sebentar..",
+                options: [
+                    { text: "Selalu kunci pintu rapat", points: ["johan", "yusuf"] },
+                    { text: "Biarin kebuka aja", points: ["yosef", "feng", "komang"] }
+                ]
+            },
+            {
+                q: "Ibu Kos datang marah-marah nagih uang sewa yang nunggak..",
+                options: [
+                    { text: "Pura-pura gak ada di kamar", points: ["johan", "yusuf", "komang"] },
+                    { text: "Maju paling depan buat nego", points: ["feng", "yosef"] }
+                ]
+            },
+            {
+                q: "Kalau ada teman mau pinjam barang kesayanganmu, kamu bakal..",
+                options: [
+                    { text: "Kasih pinjam aja", points: ["komang", "johan", "yosef"] },
+                    { text: "Bilang kalau lagi dipake", points: ["feng", "yusuf"] }
+                ]
+            },
+            {
+                q: "Cara terbaik menghabiskan waktu luang menurutmu?",
+                options: [
+                    { text: "Maraton nonton film", points: ["johan", "yosef", "feng"] },
+                    { text: "Baca-baca hal yang lagi viral di sosmed", points: ["Yusuf", "Komang"] }
+                ]
+            },
+            {
+                q: "Kalau tiba-tiba ada suara tangisan di kamar mandi pas mati lampu..",
+                options: [
+                    { text: "Langsung lari keluar kosan sambil teriak minta tolong", points: ["johan", "komang"] },
+                    { text: "Ambil senter dan cek sumber suaranya", points: ["feng", "yusuf", "yosef"] }
+                ]
+            },
+            {
+                q: "Sabun mandi atau makananmu di kulkas sering hilang secara misterius.. ",
+                options: [
+                    { text: "Ikhlasin aja", points: ["komang", "yusuf", "johan"] },
+                    { text: "Cari pencurinya", points: ["feng", "yosef"] }
+                ]
+            },
+            {
+                q: "Kalau diusir dari kosan hari ini juga, kamu bakal..",
+                options: [
+                    { text: "Numpang di kamar teman secara diam-diam sampai dapat kos baru", points: ["komang", "johan", "yusuf"] },
+                    { text: "Cari cara gila (kayak pesugihan) biar dapat duit instan", points: ["yosef", "feng"] }
+                ]
+            },
+        ];
+
+        let currentQuestionIndex = 0;
+        let scores = { komang: 0, feng: 0, yusuf: 0, yosef: 0, johan: 0 };
+        let userName = "";

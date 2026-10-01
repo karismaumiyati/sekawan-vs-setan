@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sekawan vs Setan - Siapakah Kamu?</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas untuk simpan gambar -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Font Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        html {
+            min-height: 100%;
+            background: #120b08;
+            overscroll-behavior-y: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            min-height: 100dvh;
+            background-color: #120b08 !important;
+            margin: 0;
+            overflow-x: hidden;
+            overscroll-behavior-y: none;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+        
+        .screen { display: none; min-height: 100vh; min-height: 100dvh; width: 100%; padding: 40px 20px;}
+        .screen.active { display: flex; align-items: center;justify-content: center; animation: fadeIn 0.5s ease-in-out; }
+        .hidden { display: none !important; }
+
+        #screen-landing.active {
+            height: 100vh;
+            height: 100svh;
+            min-height: 0;
+            padding: 0;
+            overflow: hidden;
+            animation: landingFadeIn .5s ease-in-out;
+        }
+
+        #screen-film.active {
+            min-height: 100vh;
+            min-height: 100svh;
+            padding: 0;
+            overflow-y: auto;
+            align-items: flex-start;
+            justify-content: center;
+            background: #120b08;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes landingFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* LANDING PAGE STYLES */
+        .landing-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            height: 100svh;
+            overflow: hidden;
+            background: #120b08;
+        }
+
+        .landing-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            z-index: 0;
+        }
+
+        .landing-mobile-visual {
+            display: none;
+        }
+
+        .title-image {
+            display: block;
+            width: min(100%, 560px);
+            margin: 0 auto 14px;
+        }
+
+        .text-wrapper {
+            position: absolute;
+            top: 51dvh;
+            left: 50%;
+            z-index: 1;
+            width: min(calc(100% - 40px), 1260px);
+            max-width: none;
+            text-align: center;
+            transform: translateX(-50%);
+        }
+
+        .hero-title {
+            font-size: clamp(24px, 2.25vw, 36px);
+            font-weight: 800;
+            line-height: 1.18;
+            text-transform: uppercase;
+            color: #fff5dd;
+            margin-bottom: 0;
+            white-space: nowrap;
+            letter-spacing: .01em;
+            text-shadow: 0 3px 12px rgba(0, 0, 0, .85), 0 0 16px rgba(245, 210, 106, .35);
+        }
+
+        .desc-text {
+            font-size: clamp(17px, 1.45vw, 23px);
+            color: #fff;
+            font-weight: 700;
+            line-height: 1.45;
+            margin: 10px auto 28px;
+            max-width: 1260px;
+            text-shadow: 0 3px 12px rgba(0, 0, 0, .72);
+        }
+
+        .landing-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            width: min(100%, 310px);
+            padding: 15px 28px;
+            font-size: 18px;
+            border-radius: 999px;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(90deg, #4b1f12, #7a3419 52%, #a15f22);
+            border: 1px solid rgba(245, 210, 106, .22);
+            cursor: pointer;
+            box-shadow: 0 12px 25px rgba(18, 11, 8, .38);
+            transition: .25s ease;
+        }
+
+        .cta-btn.secondary {
+            color: #3a1a0f;
+            background: #f5d26a;
+            border: 1px solid rgba(58, 26, 15, .16);
+            box-shadow: 0 10px 22px rgba(18, 11, 8, .18);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        .film-container {
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+            max-height: none;
+            background: #120b08;
+        }
+
+        .film-poster {
+            overflow: hidden;
+            border-radius: 0;
+            box-shadow: none;
+            background: #120b08;
+        }
+
+        .film-poster img {
+            display: block;
+            width: 100%;
+            height: min(46dvh, 410px);
+            object-fit: contain;
+            object-position: center bottom;
+            background: #120b08;
+        }
+
+        .film-poster .film-mobile-img {
+            display: none;
+        }
+
+        .film-copy {
+            width: min(calc(100% - 40px), 920px);
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 18px 0 36px;
+            text-align: center;
+        }
+
+        .film-copy .landing-actions {
+            justify-content: center;
+        }
+
+        .film-eyebrow {
+            margin: 0 0 8px;
+            color: #f5d26a;
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+        .film-title {
+            margin: 0 0 14px;
+            color: #f5d26a;
+            font-size: clamp(30px, 4.6vw, 52px);
+            font-weight: 900;
+            line-height: .95;
+            text-transform: uppercase;
+        }
+
+        .film-logo {
+            display: block;
+            width: min(100%, 360px);
+            margin: 0 auto 14px;
+            transform: translateX(-18px);
+        }
+
+        .film-desc {
+            margin: 0 auto 16px;
+            color: #fff5dd;
+            font-size: 15px;
+            line-height: 1.52;
+            max-width: 760px;
+            max-height: min(25dvh, 210px);
+            overflow-y: auto;
+            padding-right: 6px;
+            text-align: justify;
+            text-align-last: left;
+        }
+
+        .film-desc p {
+            margin: 0 0 9px;
+        }
+
+        .film-desc p:last-child {
+            margin-bottom: 0;
+        }
+
+        .film-facts {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .film-facts span {
+            display: block;
+            color: #e2b772;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .02em;
+        }
+
+        @media (min-width: 768px) {
+            #screen-film.active {
+                height: 100vh;
+                height: 100svh;
+                min-height: 0;
+                overflow: hidden;
+                background: #120b08;
+            }
+
+            .film-container {
+                position: relative;
+                height: 100vh;
+                height: 100svh;
+                min-height: 0;
+                overflow: hidden;
+                background: #120b08;
+            }
+
+            .film-poster {
+                position: absolute;
+                inset: 0;
+                z-index: 0;
+            }
+
+            .film-poster::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(180deg, rgba(18, 11, 8, 0) 0%, rgba(18, 11, 8, .12) 50%, rgba(18, 11, 8, .9) 100%);
+                pointer-events: none;
+            }
+
+            .film-poster img {
+                height: 100%;
+                object-fit: cover;
+                object-position: center top;
+            }
+
+            .film-copy {
+                position: absolute;
+                left: 50%;
+                bottom: clamp(22px, 4vh, 42px);
+                z-index: 1;
+                width: min(calc(100% - 64px), 820px);
+                padding: 0;
+                transform: translateX(-50%);
+            }
+
+            .film-eyebrow {
+                margin-bottom: 4px;
+                font-size: 12px;
+            }
+
+            .film-logo {
+                width: min(100%, 360px);
+                margin: 0 auto 8px;
+                transform: translateX(-18px);
+            }
+
+            .film-desc {
+                display: block;
+                max-height: none;
+                overflow: visible;
+                font-size: clamp(11.5px, .9vw, 13px);
+                line-height: 1.38;
+                margin: 0 auto 10px;
+                max-width: 760px;
+                text-align: center;
+                text-align-last: center;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, .82);
+            }
+
+            .film-desc p {
+                margin: 0;
+            }
+
+            .film-facts {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 6px 18px;
+                margin-bottom: 10px;
+            }
+
+            .film-facts span {
+                font-size: 12px;
+                line-height: 1.25;
+            }
+
+            .film-copy .cta-btn {
+                width: min(100%, 230px);
+                padding: 9px 20px;
+                font-size: 13px;
+            }
+        }
+
+        .visual-wrapper {
+            display: none;
+        }
+
+        .landing-visual {
+            background: #fff;
+            overflow: hidden;
+            width: 100%;
+            max-height: calc(100dvh - 80px);
+            box-shadow: 0 18px 40px rgba(10, 44, 93, 0.12);
+        }
+
+        @media (min-width: 901px) and (max-height: 760px) {
+            .text-wrapper {
+                top: 43dvh;
+            }
+
+            .hero-title {
+                font-size: clamp(21px, 2vw, 30px);
+            }
+
+            .title-image {
+                width: min(100%, 430px);
+                margin: -1px auto 8px;
+            }
+
+            .desc-text {
+                font-size: clamp(14px, 1.25vw, 18px);
+                line-height: 1.35;
+                margin-bottom: 16px;
+            }
+
+            .cta-btn {
+                width: min(100%, 260px);
+                padding: 11px 22px;
+                font-size: 14px;
+            }
+        }
+
+        .landing-color-strip {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.55fr 0.55fr 0.15fr 0.35fr;
+            height: clamp(38px, 7vh, 58px);
+        }
+
+        .landing-color-strip span:nth-child(1) { background: #0a2c5d; }
+        .landing-color-strip span:nth-child(2) { background: #641717; }
+        .landing-color-strip span:nth-child(3) { background: #3b123f; }
+        .landing-color-strip span:nth-child(4) { background: #4f6f62; }
+        .landing-color-strip span:nth-child(5) { background: #c98218; }
+        .landing-color-strip span:nth-child(6) { background: #7c9aa8; }
+
+        .landing-photo {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1321 / 1191;
+            max-height: calc(100dvh - 156px);
+            object-fit: cover;
+        }
+
+        #screen-input,
+        #screen-quiz,
+        #screen-result,
+        #screen-film {
+            align-items: center;
+            background: #120b08;
+        }
+
+        #screen-input > div,
+        .quiz-card {
+            background: linear-gradient(180deg, #fff5dd 0%, #f1d19d 100%) !important;
+            border: 1px solid rgba(245, 210, 106, .32);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, .34);
+        }
+
+        .quiz-card {
+            min-height: 430px;
+        }
+
+        #screen-input h1,
+        #question-text {
+            color: #2a140c !important;
+        }
+
+        #screen-input p,
+        #screen-input label {
+            color: #6f4529 !important;
+        }
+
+        #username {
+            background: #fffaf0 !important;
+            border-color: #d8a056 !important;
+            color: #2a140c !important;
+        }
+
+        #username:focus {
+            border-color: #a15f22 !important;
+            box-shadow: 0 0 0 4px rgba(161, 95, 34, .16);
+        }
+
+        #screen-input button {
+            background: linear-gradient(90deg, #4b1f12, #7a3419 52%, #a15f22) !important;
+            box-shadow: 0 14px 28px rgba(75, 31, 18, .34) !important;
+        }
+
+        .question-pill {
+            background: #3a1a0f;
+            color: #f5d26a;
+        }
+
+        .progress-track {
+            background: rgba(58, 26, 15, .16);
+        }
+
+        #progress-bar {
+            background: linear-gradient(90deg, #7a3419, #f5d26a) !important;
+        }
+
+        #question-text {
+            min-height: 92px;
+        }
+
+        #options-container {
+            display: grid;
+            gap: 16px;
+        }
+
+        #options-container button {
+            height: 96px;
+            overflow: hidden;
+        }
+
+        .answer-text {
+            line-height: 1.35;
+            color: #3a1a0f;
+        }
+
+        .answer-option {
+            background: #fffaf0;
+            border-color: #dfb36f;
+        }
+
+        .answer-option:hover,
+        .answer-option:focus-visible {
+            background: #f5d26a;
+            border-color: #a15f22;
+            outline: none;
+            transform: translateY(-1px);
+        }
+
+        .answer-letter {
+            background: #f8e4bd;
+            border-color: #dfb36f;
+            color: #7a3419;
+        }
+
+        .answer-option:hover .answer-letter,
+        .answer-option:focus-visible .answer-letter {
+            background: #641717;
+            border-color: #641717;
+            color: #fff5dd;
+        }
+
+        #screen-result.active {
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 14px;
+            padding-bottom: 18px;
+        }
+
+        .result-shell {
+            width: min(100%, 780px);
+            margin: 0 auto;
+        }
+
+        .result-card {
+            background: #fff5dd;
+            border-radius: 24px;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, .28);
+            display: grid;
+            grid-template-columns: minmax(360px, 1.08fr) minmax(280px, .92fr);
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .result-hero {
+            height: 100%;
+            min-height: 510px;
+        }
+
+        #display-char-img {
+            height: min(86%, 500px);
+            max-width: 104%;
+            object-fit: contain;
+            object-position: center bottom;
+            transform: translateY(1%) scale(.96);
+            transform-origin: bottom center;
+        }
+
+        .result-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px 24px 22px;
+            text-align: left;
+            background: #fff5dd !important;
+        }
+
+        .result-content #display-desc {
+            text-align: left;
+            color: #5d3a20 !important;
+            font-size: 12.5px !important;
+            margin-bottom: 10px !important;
+            line-height: 1.38 !important;
+        }
+
+        .traits-box {
+            background: #f8e4bd;
+            border: 1px solid rgba(161, 95, 34, .22);
+            margin-bottom: 10px !important;
+            padding: 12px 14px !important;
+        }
+
+        .traits-box h3 {
+            color: #641717;
+            margin-bottom: 8px !important;
+        }
+
+        .traits-box ul,
+        #display-traits {
+            gap: 5px;
+        }
+
+        .traits-box li {
+            color: #3a1a0f;
+            font-size: 12px;
+        }
+
+        .result-content .result-actions {
+            width: 100%;
+            margin: 10px 0 12px;
+        }
+
+        .result-banner {
+            margin: auto -24px -22px;
+            background: linear-gradient(90deg, #2a140c, #641717 52%, #a15f22) !important;
+            padding: 12px !important;
+        }
+
+        .result-banner-kicker {
+            margin-bottom: 4px !important;
+        }
+
+        .result-tagline {
+            margin-top: -2px;
+        }
+
+        .result-actions {
+            display: grid;
+            gap: 8px;
+            margin: 14px auto 20px;
+            width: min(80%, 360px);
+        }
+
+        .result-btn {
+            border: 0;
+            border-radius: 999px;
+            color: #fff;
+            cursor: pointer;
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 8px 18px;
+            text-align: center;
+            transition: transform .2s ease, filter .2s ease, box-shadow .2s ease;
+        }
+
+        .result-btn:hover {
+            filter: brightness(1.06);
+            transform: translateY(-1px);
+        }
+
+        .result-btn:disabled {
+            cursor: wait;
+            filter: grayscale(.2) brightness(.9);
+            transform: none;
+        }
+
+        .result-btn-download {
+            background: linear-gradient(90deg, #9b5600, #c47a00);
+            box-shadow: 0 12px 24px rgba(155, 86, 0, .36);
+        }
+
+        .result-btn-share {
+            background: linear-gradient(90deg, #8e2605, #bf3b06);
+            box-shadow: 0 12px 24px rgba(142, 38, 5, .36);
+        }
+
+        .result-btn-restart {
+            background: linear-gradient(90deg, #530006, #87000d);
+            box-shadow: 0 12px 24px rgba(83, 0, 6, .36);
+        }
+
+        @media (max-width: 767px) {
+            #screen-landing.active {
+                height: 100vh;
+                height: 100svh;
+                min-height: 100vh;
+                min-height: 100svh;
+                overflow: hidden;
+                padding-bottom: env(safe-area-inset-bottom);
+                background: #120b08;
+            }
+
+            #screen-landing {
+                padding: 0;
+                align-items: flex-start;
+                background: #120b08;
+            }
+
+            #screen-film {
+                height: auto;
+                min-height: 100vh;
+                min-height: 100svh;
+                padding: 0 0 18px;
+                align-items: flex-start;
+                overflow-y: auto;
+                background: #120b08;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .landing-container {
+                display: block;
+                position: relative;
+                max-width: 540px;
+                margin: 0 auto;
+                min-height: 100vh;
+                min-height: 100svh;
+                height: 100vh;
+                height: 100svh;
+                max-height: none;
+                overflow: hidden;
+                background: #120b08;
+            }
+
+            .landing-bg {
+                display: none;
+            }
+
+            .landing-mobile-visual {
+                display: block;
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                background: #120b08;
+                overflow: hidden;
+                z-index: 0;
+            }
+
+            .landing-mobile-visual::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background:
+                    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .02) 60%, rgba(0, 0, 0, .42) 100%);
+                pointer-events: none;
+                z-index: 2;
+            }
+
+            .landing-mobile-visual img {
+                position: absolute;
+                display: block;
+                width: 100%;
+                height: 100%;
+                aspect-ratio: auto;
+                background: #120b08;
+            }
+
+            .landing-mobile-house {
+                inset: 0;
+                object-fit: cover;
+                object-position: center top;
+                z-index: 0;
+            }
+
+            .landing-mobile-talent {
+                display: none !important;
+            }
+
+            .visual-wrapper {
+                order: 1;
+                max-width: none;
+                justify-self: stretch;
+            }
+
+            .landing-visual {
+                box-shadow: none;
+            }
+
+            .landing-color-strip {
+                display: none;
+            }
+
+            .landing-photo {
+                aspect-ratio: 1321 / 1191;
+                height: min(43dvh, 360px);
+                max-height: none;
+                object-fit: cover;
+            }
+
+            .text-wrapper {
+                position: absolute;
+                top: auto;
+                bottom: clamp(48px, 7svh, 70px);
+                left: 50%;
+                order: 2;
+                width: 100%;
+                max-width: none;
+                padding: 0 22px;
+                transform: translateX(-50%);
+                background: transparent;
+            }
+
+            .hero-title {
+                display: none;
+            }
+
+            .title-image {
+                display: none;
+            }
+
+            .desc-text {
+                display: none;
+            }
+
+            .cta-btn {
+                width: 236px;
+                max-width: calc(100vw - 56px);
+                padding: 7px 18px;
+                font-size: 11.5px;
+                box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+            }
+
+            .landing-actions {
+                display: grid;
+                gap: 6px;
+                width: 100%;
+                justify-items: center;
+            }
+
+            .film-container {
+                min-height: 0;
+                width: min(100%, 540px);
+                overflow: visible;
+                background: #120b08;
+                padding-bottom: 16px;
+            }
+
+            .film-poster {
+                border-radius: 0;
+                display: block;
+                margin: 0;
+                box-shadow: none;
+                line-height: 0;
+            }
+
+            .film-poster .film-desktop-img {
+                display: none;
+            }
+
+            .film-poster .film-mobile-img {
+                display: block;
+                height: auto;
+                width: 100%;
+                max-height: none;
+                aspect-ratio: 1080 / 1222;
+                object-fit: contain;
+                object-position: center top;
+                background: #0b0705;
+            }
+
+            .film-copy {
+                text-align: center;
+                margin: 0 auto;
+                width: 100%;
+                max-width: 520px;
+                padding: 8px 22px 22px;
+            }
+
+            .film-copy .landing-actions {
+                justify-content: center;
+                justify-items: center;
+            }
+
+            .film-eyebrow {
+                margin-bottom: 5px;
+                font-size: 12px;
+            }
+
+            .film-title {
+                margin-bottom: 10px;
+                font-size: clamp(28px, 9vw, 40px);
+            }
+
+            .film-logo {
+                width: min(86vw, 330px);
+                margin: -2px auto 10px;
+                transform: translateX(-18px);
+            }
+
+            .film-desc {
+                margin-bottom: 12px;
+                font-size: clamp(13px, 3.75vw, 15px);
+                line-height: 1.45;
+                max-height: none;
+                overflow: visible;
+                text-align: justify;
+            }
+
+            .film-facts {
+                gap: 5px;
+                margin-bottom: 14px;
+            }
+
+            .film-facts span {
+                font-size: 11px;
+            }
+
+            #screen-input.active,
+            #screen-quiz.active {
+                align-items: flex-start;
+                padding: 96px 16px 34px;
+            }
+
+            #screen-result.active {
+                padding: 34px 14px 34px;
+            }
+
+            .result-shell {
+                width: 100%;
+                max-width: 500px;
+            }
+
+            .result-card {
+                display: flex;
+                flex-direction: column;
+                border-radius: 2rem;
+            }
+
+            .result-hero {
+                height: 490px;
+                min-height: 0;
+            }
+
+            #display-char-img {
+                height: 78%;
+                max-width: 102%;
+                transform: translateY(1%) scale(.94);
+            }
+
+            #display-char-img.char-yusuf,
+            #display-char-img.char-feng {
+                height: 84%;
+                max-width: 108%;
+                transform: translateY(1%) scale(1);
+            }
+
+            .result-content {
+                display: block;
+                padding: 28px 28px 24px;
+                text-align: center;
+            }
+
+            .result-content #display-desc {
+                text-align: center;
+            }
+
+            .result-content .result-actions {
+                width: min(80%, 360px);
+                margin: 18px auto 10px;
+            }
+
+            .result-banner {
+                margin: 0 -28px -24px;
+                padding: 10px !important;
+            }
+
+            .result-tagline {
+                font-size: clamp(11px, 3.25vw, 14px) !important;
+                line-height: 1.1;
+                white-space: nowrap;
+                letter-spacing: 0;
+            }
+
+            .quiz-card {
+                width: 100%;
+                max-width: 400px;
+                min-height: 470px;
+                padding: 26px 22px !important;
+            }
+
+            #question-text {
+                height: 112px;
+                margin-bottom: 22px !important;
+                font-size: 16px !important;
+                line-height: 1.35 !important;
+                overflow: hidden;
+            }
+
+            #options-container {
+                gap: 14px;
+            }
+
+            #options-container button {
+                height: 112px;
+                padding: 16px !important;
+            }
+
+            .answer-text {
+                font-size: 13px;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+            #screen-landing.active {
+                height: 100vh;
+                height: 100svh;
+                min-height: 100vh;
+                min-height: 100svh;
+                overflow: hidden;
+                padding: 0;
+                background: #120b08;
+            }
+
+            #screen-landing {
+                padding: 0;
+                align-items: flex-start;
+                background: #120b08;
+            }
+
+            .landing-container {
+                display: block;
+                position: relative;
+                max-width: 640px;
+                margin: 0 auto;
+                min-height: 100vh;
+                min-height: 100svh;
+                height: 100vh;
+                height: 100svh;
+                overflow: hidden;
+                background: #120b08;
+            }
+
+            .landing-bg {
+                display: none;
+            }
+
+            .landing-mobile-visual {
+                display: block;
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                background: #120b08;
+                overflow: hidden;
+                z-index: 0;
+            }
+
+            .landing-mobile-visual::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .02) 60%, rgba(0, 0, 0, .42) 100%);
+                pointer-events: none;
+                z-index: 2;
+            }
+
+            .landing-mobile-visual img {
+                position: absolute;
+                display: block;
+                width: 100%;
+                height: 100%;
+                aspect-ratio: auto;
+                background: #120b08;
+            }
+
+            .landing-mobile-house {
+                inset: 0;
+                object-fit: cover;
+                object-position: center top;
+                z-index: 0;
+            }
+
+            .landing-mobile-talent {
+                display: none !important;
+            }
+
+            .text-wrapper {
+                position: absolute;
+                top: auto;
+                bottom: clamp(58px, 7svh, 86px);
+                left: 50%;
+                width: 100%;
+                max-width: none;
+                padding: 0 34px;
+                transform: translateX(-50%);
+                background: transparent;
+            }
+
+            .hero-title,
+            .title-image,
+            .desc-text {
+                display: none;
+            }
+
+            .landing-actions {
+                display: grid;
+                gap: 8px;
+                width: 100%;
+                justify-items: center;
+            }
+
+            .cta-btn {
+                width: 280px;
+                max-width: calc(100vw - 72px);
+                padding: 10px 22px;
+                font-size: 13px;
+            }
+
+            #screen-film {
+                height: auto;
+                min-height: 100vh;
+                min-height: 100svh;
+                padding: 0 0 24px;
+                align-items: flex-start;
+                overflow-y: auto;
+                background: #120b08;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            #screen-film.active {
+                height: auto;
+                min-height: 100vh;
+                min-height: 100svh;
+                overflow-y: auto;
+            }
+
+            .film-container {
+                position: relative;
+                width: min(100%, 640px);
+                height: auto;
+                min-height: 0;
+                margin: 0 auto;
+                overflow: visible;
+                background: #120b08;
+                padding-bottom: 18px;
+            }
+
+            .film-poster {
+                position: relative;
+                inset: auto;
+                border-radius: 0;
+                display: block;
+                margin: 0;
+                box-shadow: none;
+                line-height: 0;
+            }
+
+            .film-poster::after {
+                display: none;
+            }
+
+            .film-poster .film-desktop-img {
+                display: none;
+            }
+
+            .film-poster .film-mobile-img {
+                display: block;
+                width: 100%;
+                height: auto;
+                max-height: none;
+                aspect-ratio: 1080 / 1222;
+                object-fit: contain;
+                object-position: center top;
+                background: #0b0705;
+            }
+
+            .film-copy {
+                position: relative;
+                left: auto;
+                bottom: auto;
+                z-index: 1;
+                width: 100%;
+                max-width: 620px;
+                margin: 0 auto;
+                padding: 12px 30px 24px;
+                transform: none;
+                text-align: center;
+            }
+
+            .film-copy .landing-actions {
+                justify-content: center;
+                justify-items: center;
+            }
+
+            .film-eyebrow {
+                margin-bottom: 6px;
+                font-size: 12px;
+            }
+
+            .film-logo {
+                width: min(78vw, 360px);
+                margin: -2px auto 12px;
+                transform: translateX(-18px);
+            }
+
+            .film-desc {
+                margin-bottom: 14px;
+                font-size: clamp(14px, 2.2vw, 16px);
+                line-height: 1.5;
+                max-height: none;
+                overflow: visible;
+                text-align: justify;
+                text-align-last: left;
+            }
+
+            .film-facts {
+                display: grid;
+                gap: 6px;
+                margin-bottom: 16px;
+            }
+
+            .film-facts span {
+                font-size: 12px;
+            }
+
+            #screen-input.active,
+            #screen-quiz.active {
+                align-items: flex-start;
+                padding: 118px 24px 42px;
+            }
+
+            .quiz-card {
+                width: 100%;
+                max-width: 500px;
+                min-height: 500px;
+                padding: 32px 28px !important;
+            }
+
+            #question-text {
+                height: 112px;
+                margin-bottom: 24px !important;
+                font-size: 18px !important;
+                line-height: 1.36 !important;
+                overflow: hidden;
+            }
+
+            #options-container button {
+                height: 112px;
+                padding: 18px !important;
+            }
+
+            #screen-result.active {
+                padding: 38px 24px 38px;
+            }
+
+            .result-shell {
+                width: 100%;
+                max-width: 600px;
+            }
+
+            .result-card {
+                display: flex;
+                flex-direction: column;
+                border-radius: 2rem;
+                width: 100%;
+            }
+
+            .result-hero {
+                height: 580px;
+                min-height: 0;
+            }
+
+            #display-char-img {
+                height: 86%;
+                max-width: 112%;
+                transform: translateY(1%) scale(1.02);
+            }
+
+            .result-content {
+                display: block;
+                padding: 34px 34px 30px;
+                text-align: center;
+            }
+
+            .result-content #display-desc {
+                text-align: center;
+                font-size: 13px !important;
+            }
+
+            .result-content .result-actions {
+                width: min(76%, 400px);
+                margin: 22px auto 26px;
+            }
+
+            .result-banner {
+                margin: 0 -34px -30px;
+            }
+
+            .result-tagline {
+                font-size: clamp(13px, 2.4vw, 16px) !important;
+                line-height: 1.1;
+                white-space: nowrap;
+                letter-spacing: 0;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .hero-title {
+                font-size: 16px;
+            }
+
+            .title-image {
+                width: min(72vw, 235px);
+            }
+
+            .desc-text {
+                font-size: 11.2px;
+                max-width: 295px;
+            }
+
+            .landing-photo {
+                height: 41dvh;
+            }
+
+            .cta-btn {
+                padding: 7px 18px;
+                font-size: 11px;
+            }
+
+            .film-poster img {
+                height: auto;
+            }
+
+            .film-copy {
+                padding-top: 8px;
+            }
+
+            .film-desc {
+                max-height: none;
+                overflow: visible;
+            }
+
+            #screen-input.active,
+            #screen-quiz.active {
+                padding-top: 78px;
+            }
+
+            #screen-result.active {
+                padding-top: 42px;
+            }
+
+            .result-hero {
+                height: 450px;
+            }
+
+            .quiz-card {
+                min-height: 455px;
+            }
+
+            #options-container button {
+                height: 104px;
+            }
+        }
+
+        @media (max-width: 767px) and (max-height: 700px) and (orientation: portrait) {
+            #screen-landing.active {
+                height: 100vh;
+                height: 100svh;
+                overflow: hidden;
+            }
+
+            .landing-container {
+                height: 100vh;
+                height: 100svh;
+                min-height: 100vh;
+                min-height: 100svh;
+            }
+
+            .text-wrapper {
+                bottom: max(8px, env(safe-area-inset-bottom));
+            }
+        }
+
+        @media (max-width: 767px) and (orientation: landscape) {
+            #screen-landing {
+                padding: 0;
+            }
+
+            #screen-film {
+                padding: 0;
+            }
+
+            .landing-container {
+                display: block;
+                max-width: 100%;
+                height: 100svh;
+                max-height: none;
+                overflow: hidden;
+            }
+
+            .landing-bg {
+                display: block;
+            }
+
+            .landing-mobile-visual {
+                display: none;
+            }
+
+            .text-wrapper {
+                position: absolute;
+                top: 44dvh;
+                left: 50%;
+                padding: 0 18px;
+                transform: translateX(-50%);
+                background: transparent;
+            }
+
+            .hero-title {
+                font-size: 21px;
+                margin-bottom: 0;
+                white-space: nowrap;
+            }
+
+            .title-image {
+                width: min(100%, 300px);
+                margin: 5px auto 10px;
+            }
+
+            .desc-text {
+                font-size: 13px;
+                line-height: 1.45;
+                margin-bottom: 14px;
+            }
+
+            .cta-btn {
+                width: min(100%, 260px);
+                padding: 11px 22px;
+            }
+
+            .landing-actions {
+                gap: 10px;
+            }
+
+            .film-container {
+                height: auto;
+                overflow: visible;
+            }
+
+            .film-poster {
+                height: auto;
+            }
+
+            .film-poster .film-desktop-img {
+                display: block;
+                height: 42dvh;
+                object-fit: contain;
+                object-position: center bottom;
+            }
+
+            .film-poster .film-mobile-img {
+                display: none;
+            }
+
+            .film-copy {
+                padding: 16px 24px 24px;
+                text-align: center;
+            }
+
+            .film-logo {
+                margin-left: auto;
+            }
+
+            .film-title {
+                font-size: clamp(28px, 6vw, 42px);
+            }
+
+            .film-desc {
+                font-size: 13px;
+                max-height: none;
+                overflow: visible;
+            }
+        }
+
+
+        /* DOWNLOAD CARD 9:16 */
+        #hidden-download-card {
+            position: fixed;
+            left: -9999px;
+            top: 0;
+            width: 540px; 
+            height: 960px;
+            z-index: -1;
+            overflow: hidden;
+            background: #0b0705;
+        }
+
+        #dl-bg-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .dl-userline {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            z-index: 2;
+            width: 100%;
+            padding: 0 30px;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .dl-userline p {
+            margin: 0;
+            color: #fff;
+            font-size: 21px;
+            font-weight: 900;
+            letter-spacing: .08em;
+            line-height: 1.1;
+            text-shadow: 0 3px 8px rgba(0, 0, 0, .95);
+            text-transform: uppercase;
+        }
+
+        .result-persona-title {
+            margin: 0 0 10px;
+            color: #111827;
+            font-size: clamp(24px, 3.2vw, 36px);
+            font-weight: 900;
+            line-height: 1;
+            text-align: center;
+        }
+
+        #dl-username {
+            color: #ffd21f;
+        }
+
+        .text-shadow-strong { text-shadow: 2px 2px 4px #000000; }
+        
+        #musicToggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            z-index: 9999;
+            background: white;
+            border: 0;
+            border-radius: 50%;
+            padding: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            touch-action: manipulation;
+        }
+        #musicToggle.visible { display: flex; }
+        #musicToggle img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- AUDIO ELEMENT -->
+    <audio id="bgm" loop preload="auto">
+        <source src="assets/lagu-1.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- MUSIC TOGGLE ICON -->
+    <button id="musicToggle" type="button" onclick="toggleMusic()" aria-label="Toggle Music">
+        <img id="musicToggleIcon" src="assets/icon-ghost.png" alt="">
+    </button>
+
+    <!-- SCREEN 1: LANDING PAGE -->
+    <section id="screen-landing" class="screen active">
+        <div class="landing-container">
+            <img class="landing-bg" src="assets/homepage-desktop.png" alt="Karakter Sekawan vs Setan">
+            <div class="landing-mobile-visual">
+                <img class="landing-mobile-house" src="assets/bg-1-revised.png" alt="Cover Sekawan vs Setan">
+                <img class="landing-mobile-talent" src="assets/character-sekawan-vs-setan.png?v=20260607-2248" alt="Karakter Sekawan vs Setan">
+            </div>
+            
+            <div class="text-wrapper">
+                <h1 class="hero-title">Siapakah Kamu di Film</h1>
+                <img class="title-image" src="assets/logo-final.png" alt="Sekawan vs Setan">
+
+                <p class="desc-text">
+                    Temukan kembaranmu melalui karakter-karakter ikonik dalam film yang akan mengaduk-aduk perutmu.
+                </p>
+
+                <div class="landing-actions">
+                    <button onclick="goToInputName()" class="cta-btn">
+                        Ikutan tesnya, yuk!
+                    </button>
+                    <button onclick="goToFilmInfo()" class="cta-btn secondary">
+                        Tentang Film
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- SCREEN 2: DESKRIPSI FILM -->
+    <section id="screen-film" class="screen">
+        <div class="film-container">
+            <div class="film-poster">
+                <img class="film-desktop-img" src="assets/homepage-desktop.png" alt="Karakter Sekawan vs Setan">
+                <img class="film-mobile-img" src="assets/character-sekawan-vs-setan.png?v=20260607-2248" alt="Karakter Sekawan vs Setan">
+            </div>
+
+            <div class="film-copy">
+                <p class="film-eyebrow">Tentang Film</p>
+                <img class="film-logo" src="assets/logo-final.png" alt="Sekawan vs Setan">
+                <div class="film-desc">
+                    <p>Sekawan Vs Setan mengisahkan persahabatan sekelompok mahasiswa yang tinggal di kontrakan kesayangan mereka. Hidup yang awalnya penuh tawa berubah kacau ketika mereka terancam diusir karena tunggakan uang kontrakan. Dalam keadaan terdesak, mereka nekat melakukan pesugihan demi mendapatkan uang cepat. Namun, keputusan itu justru membuka petaka besar yang menguji persahabatan, keberanian, dan nasib mereka. Mampukah mereka selamat dari teror yang mereka ciptakan sendiri? Saksikan kisah lengkapnya dalam Film Sekawan Vs Setan.</p>
+                </div>
+                <div class="film-facts">
+                    <span>Genre: Horor komedi</span>
+                    <span>Tayang: 9 Juli 2026</span>
+                    <span>Ikuti kuisnya untuk tahu kamu paling mirip siapa.</span>
+                </div>
+                <div class="landing-actions">
+                    <button onclick="goToInputName()" class="cta-btn">
+                        Mulai Tes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- SCREEN 2: INPUT NAMA -->
+    <section id="screen-input" class="screen items-center justify-center px-4">
+        <div class="w-full max-w-[400px] bg-white rounded-3xl shadow-2xl p-8 text-center">
+            <h1 class="text-2xl font-black text-gray-800 mb-2">SEKAWAN SIAPAKAH KAMU?</h1>
+            <p class="text-gray-500 mb-8 text-sm uppercase tracking-wide">Yang bohong, jadi setannya!</p>
+            
+            <div class="mb-8 text-left">
+                <label class="block text-xs font-bold uppercase text-gray-400 mb-2 tracking-widest">Nama Kamu</label>
+                <input type="text" id="username" placeholder="Ketik nama kamu..." 
+                    class="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-gray-100 focus:border-[#a15f22] outline-none font-bold text-gray-700 transition-all">
+            </div>
+
+            <button onclick="startQuiz()" 
+                class="w-full py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-[#4b1f12] via-[#7a3419] to-[#a15f22] shadow-xl hover:opacity-90 transition">
+                Mulai Kuis
+            </button>
+        </div>
+    </section>
+
+    <!-- SCREEN 3: QUIZ QUESTIONS -->
+    <section id="screen-quiz" class="screen items-center justify-center px-4">
+        <div class="quiz-card w-full max-w-[400px] bg-white rounded-3xl shadow-2xl p-8">
+            <div class="flex justify-between items-center mb-6">
+                <span class="question-pill text-xs font-bold px-4 py-2 rounded-full">
+                    Pertanyaan <span id="current-q-num">1</span>/10
+                </span>
+                <div class="progress-track h-2 w-24 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-[#7a3419] to-[#f5d26a] transition-all" style="width: 10%"></div>
+                </div>
+            </div>
+
+            <h2 id="question-text" class="text-lg font-bold text-gray-800 mb-8 leading-tight min-h-[80px] flex items-center">
+                Memuat pertanyaan...
+            </h2>
+
+            <div id="options-container" class="space-y-4">
+                <!-- Pilihan Jawaban via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SCREEN 4: RESULT -->
+    <section id="screen-result" class="screen items-center justify-center px-4 py-100 flex-col">
+        <div class="result-shell">
+            <!-- CARD UTAMA -->
+            <div class="result-card">
+                <!-- Header Gambar -->
+                <div class="result-hero relative w-full overflow-hidden bg-gray-900">
+                    <img id="display-header-bg" src="assets/background.png" onerror="this.src='assets/background.png'" class="absolute inset-0 w-full h-full object-cover z-0 opacity-80" alt="Background">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-0"></div>
+
+                    <!-- Label User -->
+                    <div class="absolute top-10 left-0 w-full text-center z-30">
+                        <p class="text-white text-[11px] font-bold tracking-[0.3em] uppercase drop-shadow-lg">
+                            <span id="display-username" class="text-yellow-400">NAMA</span>, KAMU ADALAH
+                        </p>
+                    </div>
+                    
+                    <!-- Nama Tokoh (Belakang Foto) -->
+                    <div class="absolute inset-0 flex items-start justify-center z-10 pt-9 scale-90">
+                        <h1 id="display-char-name" class="text-white text-[75px] font-black uppercase tracking-tighter leading-none text-center">
+                            TOKOH
+                        </h1>
+                    </div>
+
+                    <!-- Foto Karakter (Depan) -->
+                    <div class="absolute inset-0 z-20 flex items-end justify-center">
+                        <img id="display-char-img" src="" class="object-contain drop-shadow-2xl" alt="Karakter">
+                    </div>
+                </div>
+
+                <!-- Deskripsi & Sifat -->
+                <div class="result-content bg-white relative z-20">
+                    <h2 id="display-result-title" class="result-persona-title">No Drama</h2>
+
+                    <p id="display-desc" class="text-sm leading-relaxed mb-6 text-gray-600 font-medium">
+                        Deskripsi karakter...
+                    </p>
+                    
+                    <div class="traits-box p-6 rounded-2xl text-left mb-6">
+                        <h3 class="text-xs font-black mb-4 uppercase tracking-widest flex items-center gap-2">
+                            SIFAT-SIFATMU
+                        </h3>
+                        <ul id="display-traits" class="text-sm text-gray-700 space-y-2 list-disc list-inside font-medium">
+                            <!-- List JS -->
+                        </ul>
+                    </div>
+
+                    <div class="result-actions">
+                        <button onclick="downloadResult(event)" class="result-btn result-btn-download">
+                            Simpan Gambar
+                        </button>
+
+                        <button onclick="shareResult(event)" class="result-btn result-btn-share">
+                            Bagikan Hasil
+                        </button>
+
+                        <button onclick="restartQuiz()" class="result-btn result-btn-restart">
+                            Ulangi Tes
+                        </button>
+                    </div>
+                    <!-- Banner Film -->
+                    <div class="result-banner bg-gradient-to-r from-[#08022E] via-[#400505] to-[#38042D] p-6 text-white text-center">
+                        <p class="result-banner-kicker font-black text-sm md:text-base mb-2">Tayang Perdana Sekawan Vs Setan</p>
+                        <p class="result-tagline font-black text-lg md:text-2xl tracking-wide">SETANNYA HOROR, <span class="text-yellow-300">TINGKAHNYA HUMOR</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- HIDDEN DOWNLOAD CANVAS -->
+    <div id="hidden-download-card">
+        <img id="dl-bg-img" src="" crossorigin="anonymous" alt="Hasil kuis">
+        <div class="dl-userline">
+            <p><span id="dl-username">NAMA</span>, KAMU ADALAH</p>
+        </div>
+    </div>
+
+    
+
+    <script>
+        // --- DATA & STATE ---
+        const characters = {
+            komang: {
+                name: "Komang",
+                desc: "Kamu tipe orang yang selalu mikirin perasaan orang lain duluan. Rendah hati, sabar, dan hampir nggak pernah bikin suasana panas. Kadang terlalu baik sampai lupa sama diri sendiri",
+                traits: [
+                    "Perhatian sampai kadang lupa sama diri sendiri",
+                    "Anti ngomong enggak alias people pleaser",
+                    "Rendah hati dan ga suka pamer",
+                    "Sabar ngadepin apa aja masalahnya",
+                    "Baik tanpa banyak drama"
+                ],
+                resultTitle: "People Pleasure",
+                matches: "Johan", mismatches: "Yosef",
+                charImg: "assets/komang.png",
+                headerBg: "assets/background.png",
+                downloadBg: "assets/card komang.png"
+            },
+            feng: {
+                name: "Feng",
+                desc: "Percaya diri, tegas, dan punya aura pemimpin. Kamu tau apa yang kamu mau dengan prinsip yang kuat.",
+                traits: [
+                    "Punya jiwa percaya diri yang too much",
+                    "Jiwa pemimpinnya ngalahin presiden",
+                    "Manchester United garis keras",
+                    "Tegas dan jujur"
+                ],
+                resultTitle: "The Mediator",
+                matches: "Yusuf", mismatches: "Johan",
+                charImg: "assets/feng.png",
+                headerBg: "assets/background.png",
+                downloadBg: "assets/card feng.png"
+            },
+            yusuf: {
+                name: "Yusuf",
+                desc: "Kalau bisa mudah kenapa harus dibuat ribet adalah prinsip yang kamu pegang. Untuk menjaga suasana tetap damai kamu akan bertindak realistis, ngalah.",
+                traits: [
+                    "Skeptis tapi masih logis?",
+                    "Suka banget mendam perasaan",
+                    "Simple aja gamau dibuat ribet",
+                    "Ngalahan jadi orang"
+                ],
+
+                resultTitle: "No Drama",
+                matches: "Feng", mismatches: "Yosef",
+                charImg: "assets/yusuf.png",
+                headerBg: "assets/background.png",
+                downloadBg: "assets/card yusuf.png"
+            },
+            yosef: {
+                name: "Yosef",
+                desc: "Nama tengahmu adalah 'Chaos'. Kamu suka hal baru, nekat, dan selalu punya ide gila yang bikin tongkrongan jadi pecah. Tanpamu, rasanya ada yang kurang.",
+                traits: [
+                    "Jahil ga kenal waktu",
+                    "Semua orang juga kamu kenal, extrovert parah",
+                    "Kreatif kalau soal ide gila",
+                    "Sipaling gas apapun kondisinya"
+                ],
+                resultTitle: "Duta Kekacauan",
+                matches: "Feng", mismatches: "Komang",
+                charImg: "assets/yosef.png",
+                headerBg: "assets/background.png",
+                downloadBg: "assets/card yosef.png"
+            },
+            johan: {
+                name: "Johan",
+                desc: "Kamu penakut tapi tulus, lugu, penurut, dan berhati lembut. Fix anak bungsunya tongkrongan. Lebih suka jadi penonton daripada jadi pemeran utama.",
+                traits: [
+                    "Ga enakan banget jadi orang",
+                    "Penakut tapi baik",
+                    "Lebih sayang binatang daripada diri sendiri",
+                    "Dor dor! Pecinta film action",
+                    "Polos dan paling lugu"
+                ],
+                resultTitle: "Yes Man",
+                matches: "Komang", mismatches: "Feng",
+                charImg: "assets/johannnn.png",
+                headerBg: "assets/background.png",
+                downloadBg: "assets/card johan.png"
+            }
+        };
+
+        const questions = [
+            {
+                q: "Pas lagi bokek parah di akhir bulan, kamu tipe yang..",
+                options: [
+                    { text: "Masak mie instan sebungkus, airnya dibanyakin biar kenyang", points: ["komang", "johan", "yusuf"] },
+                    { text: "Cari pinjaman ke teman atau nekat makan dulu bayar belakangan", points: ["feng", "yosef"] }
+                ]
+            },
+            {
+                q: "Melihat tumpukan baju kotor di pojok kamar yang sudah mulai bau..",
+                options: [
+                    { text: "Langsung nyuci hari itu juga", points: ["feng", "komang"] },
+                    { text: "Tunggu sampai stok baju bersih habis", points: ["yusuf", "yosef", "johan"] }
+                ]
+            },
+            {
+                q: "Kalau lagi ada teman-teman kos ngumpul di ruang tengah kamu bakal.. ",
+                options: [
+                    { text: "Ikut nimbrung", points: ["yosef", "feng"] },
+                    { text: "Nyapa bentar terus balik ke kamar", points: ["yusuf", "komang", "johan"] }
+                ]
+            },
+            {
+                q: "Kalau mau keluar kamar sebentar..",
+                options: [
+                    { text: "Selalu kunci pintu rapat", points: ["johan", "yusuf"] },
+                    { text: "Biarin kebuka aja", points: ["yosef", "feng", "komang"] }
+                ]
+            },
+            {
+                q: "Ibu Kos datang marah-marah nagih uang sewa yang nunggak..",
+                options: [
+                    { text: "Pura-pura gak ada di kamar", points: ["johan", "yusuf", "komang"] },
+                    { text: "Maju paling depan buat nego", points: ["feng", "yosef"] }
+                ]
+            },
+            {
+                q: "Kalau ada teman mau pinjam barang kesayanganmu, kamu bakal..",
+                options: [
+                    { text: "Kasih pinjam aja", points: ["komang", "johan", "yosef"] },
+                    { text: "Bilang kalau lagi dipake", points: ["feng", "yusuf"] }
+                ]
+            },
+            {
+                q: "Cara terbaik menghabiskan waktu luang menurutmu?",
+                options: [
+                    { text: "Maraton nonton film", points: ["johan", "yosef", "feng"] },
+                    { text: "Baca-baca hal yang lagi viral di sosmed", points: ["yusuf", "komang"] }
+                ]
+            },
+            {
+                q: "Kalau tiba-tiba ada suara tangisan di kamar mandi pas mati lampu..",
+                options: [
+                    { text: "Langsung lari keluar kosan sambil teriak minta tolong", points: ["johan", "komang"] },
+                    { text: "Ambil senter dan cek sumber suaranya", points: ["feng", "yusuf", "yosef"] }
+                ]
+            },
+            {
+                q: "Sabun mandi atau makananmu di kulkas sering hilang secara misterius.. ",
+                options: [
+                    { text: "Ikhlasin aja", points: ["komang", "yusuf", "johan"] },
+                    { text: "Cari pencurinya", points: ["feng", "yosef"] }
+                ]
+            },
+            {
+                q: "Kalau diusir dari kosan hari ini juga, kamu bakal..",
+                options: [
+                    { text: "Numpang di kamar teman secara diam-diam sampai dapat kos baru", points: ["komang", "johan", "yusuf"] },
+                    { text: "Cari cara gila (kayak pesugihan) biar dapat duit instan", points: ["yosef", "feng"] }
+                ]
+            },
+        ];
+
+        let currentQuestionIndex = 0;
+        let scores = { komang: 0, feng: 0, yusuf: 0, yosef: 0, johan: 0 };
+        let userName = "";
+
+        // --- NAVIGATION ---
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function goToInputName() {
+            startAudio();
+            switchScreen('screen-input');
+        }
+
+        function goToFilmInfo() {
+            switchScreen('screen-film');
+        }
+
+        function startQuiz() {
+            const input = document.getElementById('username');
+            if (!input.value.trim()) { alert("Isi nama kamu dulu ya!"); return; }
+            userName = input.value.trim();
+            switchScreen('screen-quiz');
+            loadQuestion();
+        }
+
+        // --- QUIZ LOGIC ---
+        function loadQuestion() {
+            const q = questions[currentQuestionIndex];
+            document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
+            document.getElementById('progress-bar').style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+            document.getElementById('question-text').innerText = q.q;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = "";
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "answer-option w-full text-left p-5 rounded-2xl border-2 transition-all flex items-center gap-4 group";
+                btn.innerHTML = `
+                    <div class="answer-letter border-2 font-black w-10 h-10 flex items-center justify-center rounded-xl transition-all shrink-0">${String.fromCharCode(65 + idx)}</div>
+                    <span class="answer-text font-bold text-sm">${opt.text}</span>
+                `;
+                btn.onclick = () => handleAnswer(opt.points);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(points) {
+            points.forEach(char => scores[char]++);
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            let maxScore = -1, resultKey = "komang";
+            for (const [char, score] of Object.entries(scores)) {
+                if (score > maxScore) { maxScore = score; resultKey = char; }
+            }
+            const data = characters[resultKey];
+
+            // Update UI Result
+            document.getElementById('display-username').innerText = userName;
+            document.getElementById('display-char-name').innerText = data.name;
+            document.getElementById('display-result-title').innerText = data.resultTitle;
+            document.getElementById('display-desc').innerText = data.desc;
+            const resultImage = document.getElementById('display-char-img');
+            resultImage.src = data.charImg;
+            resultImage.className = `object-contain drop-shadow-2xl char-${resultKey}`;
+            document.getElementById('display-header-bg').src = data.headerBg;
+            document.getElementById('display-traits').innerHTML = data.traits.map(t => `<li>${t}</li>`).join('');
+
+            // Update Download Card
+            document.getElementById('dl-username').innerText = userName;
+            document.getElementById('dl-bg-img').src = data.downloadBg;
+
+            switchScreen('screen-result');
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            scores = { komang: 0, feng: 0, yusuf: 0, yosef: 0, johan: 0 };
+            document.getElementById('username').value = "";
+            switchScreen('screen-input');
+        }
+
+        // --- AUDIO CONTROLS ---
+        const audio = document.getElementById('bgm');
+        const audioBtn = document.getElementById('musicToggle');
+        const audioIcon = document.getElementById('musicToggleIcon');
+        const musicPlayingIcon = 'assets/icon-muted-speaker.png';
+        const musicMutedIcon = 'assets/icon-ghost.png';
+
+        function setMusicIcon(isPlaying) {
+            audioIcon.src = isPlaying ? musicPlayingIcon : musicMutedIcon;
+        }
+
+        function startAudio() {
+            audio.volume = 0.3;
+            audio.muted = false;
+            audioBtn.classList.add('visible');
+            audio.play()
+                .then(() => { setMusicIcon(true); })
+                .catch(() => {
+                    setMusicIcon(false);
+                    console.log("Audio block by browser");
+                });
+        }
+
+        function toggleMusic() {
+            audioBtn.classList.add('visible');
+            if (audio.paused) {
+                audio.muted = false;
+                audio.play()
+                    .then(() => { setMusicIcon(true); })
+                    .catch(() => { setMusicIcon(false); });
+            } else {
+                audio.pause();
+                setMusicIcon(false);
+            }
+        }
+
+        // --- DOWNLOAD & SHARE ---
+        function waitForImages(root) {
+            const images = Array.from(root.querySelectorAll("img"));
+            return Promise.all(images.map(img => {
+                if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+                return new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = reject;
+                });
+            }));
+        }
+
+        async function buildResultCanvas() {
+            const el = document.getElementById("hidden-download-card");
+            await waitForImages(el);
+            return html2canvas(el, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: false,
+                backgroundColor: null
+            });
+        }
+
+        function canvasToBlob(canvas) {
+            return new Promise((resolve, reject) => {
+                canvas.toBlob(blob => {
+                    if (blob) {
+                        resolve(blob);
+                    } else {
+                        reject(new Error("Canvas gagal dibuat menjadi gambar."));
+                    }
+                }, "image/png");
+            });
+        }
+
+        async function downloadResult(event) {
+            const btn = event.currentTarget;
+            const original = btn.textContent;
+            btn.textContent = "Memproses...";
+            btn.disabled = true;
+            
+            try {
+                const canvas = await buildResultCanvas();
+                const link = document.createElement("a");
+                link.download = `Sekawan-${userName}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            } catch (e) {
+                alert("Gagal menyimpan gambar.");
+            } finally {
+                btn.textContent = original;
+                btn.disabled = false;
+            }
+        }
+
+        async function shareResult(event) {
+            const btn = event.currentTarget;
+            const original = btn.textContent;
+            btn.textContent = "Menyiapkan...";
+            btn.disabled = true;
+
+            try {
+                const canvas = await buildResultCanvas();
+                const blob = await canvasToBlob(canvas);
+                const file = new File([blob], `Sekawan-${userName}.png`, { type: "image/png" });
+                const characterName = document.getElementById('display-char-name').innerText.toLowerCase();
+                const shareData = {
+                    files: [file],
+                    title: "Hasil Kuis Sekawan vs Setan",
+                    text: `aku dapat ${characterName}. yuk tes kepribadianmu juga di www.filmsekawansetan.com`
+                };
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share(shareData);
+                } else {
+                    const link = document.createElement("a");
+                    link.download = `Sekawan-${userName}.png`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                    alert("Browser ini belum mendukung share langsung. Gambar sudah disiapkan untuk dibagikan manual ke Instagram Story.");
+                }
+            } catch (e) {
+                alert("Gagal membagikan hasil. Coba simpan gambar dulu, lalu upload ke Instagram Story.");
+            } finally {
+                btn.textContent = original;
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

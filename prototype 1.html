@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Kepribadian: Siapa Kamu di Tongkrongan?</title>
+    <!-- Menggunakan Tailwind CSS untuk styling cepat -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Menggunakan html2canvas untuk fitur simpan gambar -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #99bbff;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Styling khusus untuk kartu hasil agar rapi saat di-screenshot */
+        #result-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-2xl">
+        
+        <!-- HALAMAN 1: INPUT NAMA -->
+        <div id="start-page" class="bg-white rounded-2xl shadow-xl p-8 text-center fade-in">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Kuis Karakter Tongkrongan</h1>
+            <p class="text-gray-500 mb-8">Cari tahu siapa jati dirimu yang sebenarnya!</p>
+            
+            <div class="mb-6">
+                <label for="username" class="block text-left text-sm font-semibold text-gray-700 mb-2">Nama Kamu</label>
+                <input type="text" id="username" placeholder="Masukkan nama panggilan..." 
+                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+            </div>
+
+            <button onclick="startQuiz()" 
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition transform hover:scale-105 shadow-md">
+                Mulai Tes
+            </button>
+        </div>
+
+        <!-- HALAMAN 2: PERTANYAAN -->
+        <div id="quiz-page" class="bg-white rounded-2xl shadow-xl p-8 hidden fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <span class="text-xs font-bold uppercase tracking-widest text-blue-500">Pertanyaan <span id="current-q-num">1</span>/12</span>
+                <div class="h-2 w-32 bg-gray-200 rounded-full">
+                    <div id="progress-bar" class="h-2 bg-gradient-to-r from-pink-500 to-blue-500 rounded-full transition-all duration-300" style="width: 8%"></div>
+                </div>
+            </div>
+
+            <h2 id="question-text" class="text-xl font-bold text-gray-800 mb-8 min-h-[60px]">Loading...</h2>
+
+            <div id="options-container" class="space-y-3">
+                <!-- Buttons will be injected here -->
+            </div>
+        </div>
+
+        <!-- HALAMAN 3: HASIL -->
+        <div id="result-page" class="hidden fade-in">
+            <!-- Kartu ini yang akan dijadikan PNG -->
+            <div id="result-card" class="bg-white rounded-2xl shadow-xl p-8 border-4 border-white relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500"></div>
+                
+                <div class="text-center mb-6">
+                    <p class="text-gray-500 uppercase text-xs tracking-widest mb-1">Hasil Analisis</p>
+                    <h1 id="result-title" class="text-3xl font-bold text-gray-900">Nama adalah ...</h1>
+                    <div id="result-badge" class="mt-4 inline-block px-4 py-1 rounded-full text-sm font-bold bg-gray-200 text-gray-700">
+                        Sifat Dominan
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-100 mb-6 text-center">
+                    <p id="result-desc" class="text-gray-700 italic leading-relaxed">...</p>
+                    <div id="result-traits" class="mt-4 flex flex-wrap justify-center gap-2">
+                        <!-- Traits badges -->
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+                        <h3 class="text-green-700 font-bold text-sm mb-2 flex items-center">
+                            ✅ Paling Cocok
+                        </h3>
+                        <p id="match-text" class="text-sm text-gray-600">...</p>
+                    </div>
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <h3 class="text-red-700 font-bold text-sm mb-2 flex items-center">
+                            ❌ Paling Ga Cocok
+                        </h3>
+                        <p id="mismatch-text" class="text-sm text-gray-600">...</p>
+                    </div>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <p class="text-[10px] text-gray-400">Kuis Karakter Tongkrongan © 2024</p>
+                </div>
+            </div>
+
+            <!-- Tombol Aksi (Tidak ikut di screenshot) -->
+            <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                <button onclick="restartQuiz()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 rounded-lg transition">
+                    Ulangi Tes
+                </button>
+                <button onclick="shareResult()" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition">
+                    Bagikan Link
+                </button>
+                <button onclick="downloadResult()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition flex justify-center items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Simpan Hasil
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DATA KARAKTER ---
+        const characters = {
+            adi: {
+                name: "Adi",
+                title: "Si Paling Ramah",
+                desc: "Kamu adalah nyawanya tongkrongan. Tanpa kamu, suasana jadi sepi. Kamu peduli banget sama teman, meskipun kadang jokes kamu receh parah.",
+                traits: ["Ramah", "Baik Hati", "Perhatian", "Receh", "Social Butterfly"],
+                matches: "Siapapun yang butuh hiburan (Semua orang suka Adi).",
+                mismatches: "Iqbal (Karena Iqbal kadang mager diajak ngomong)."
+            },
+            iqbal: {
+                name: "Iqbal",
+                title: "Si Introvert Misterius",
+                desc: "Kamu lebih suka ketenangan dan kenyamanan sendiri. Kalau diajak main mikirnya 1000 kali. Sering nunda kerjaan tapi entah kenapa hidupmu aman-aman aja (mungkin karena kaya?).",
+                traits: ["Introvert", "Sultan", "Hemat (Pelit?)", "Procrastinator", "Mageran"],
+                matches: "Uus (Karena sama-sama ga banyak drama).",
+                mismatches: "Onar (Terlalu berisik buat kamu)."
+            },
+            uus: {
+                name: "Uus",
+                title: "Si Lempeng Normal",
+                desc: "Definisi warga negara yang baik. Hidup kamu lurus banget, jarang kena masalah, rajin, dan selalu sesuai aturan. Kamu adalah penyeimbang di antara teman-temanmu yang aneh.",
+                traits: ["Rajin", "Normal", "Lurus", "Taat Aturan", "Stabil"],
+                matches: "Eka (Sama-sama punya etos kerja).",
+                mismatches: "Onar (Bikin kamu jantungan)."
+            },
+            eka: {
+                name: "Eka",
+                title: "Si Pekerja Keras",
+                desc: "Kamu tipe orang yang 'Work Hard'. Ga banyak tingkah, yang penting kerjaan beres. Tapi kayanya kamu butuh asupan nikotin biar otaknya jalan lancar.",
+                traits: ["Hard Worker", "To The Point", "Realistis", "Ahli Hisap", "Fokus"],
+                matches: "Uus (Bisa diajak serius).",
+                mismatches: "Iqbal (Kamu kesel liat orang males)."
+            },
+            onar: {
+                name: "Onar",
+                title: "Si Pembuat Masalah",
+                desc: "Hidup tanpa masalah itu membosankan buat kamu. Kamu suka tantangan, suka hal baru, dan sering bikin orang lain geleng-geleng kepala sama kelakuanmu.",
+                traits: ["Chaotic", "Suka Tantangan", "Heboh", "Unpredictable", "Berani"],
+                matches: "Adi (Bisa diajak gila-gilaan).",
+                mismatches: "Uus (Kamu bikin tatanan hidup dia berantakan)."
+            }
+        };
+
+        // --- DATA PERTANYAAN ---
+        // Scoring key: array of characters that get points for this answer
+        const questions = [
+            {
+                q: "Apa yang biasanya kamu lakukan saat akhir pekan?",
+                options: [
+                    { text: "Nongkrong bareng banyak orang sambil bercanda.", points: ["adi", "onar"] },
+                    { text: "Di rumah saja, main gadget atau tidur.", points: ["iqbal"] },
+                    { text: "Melakukan hobi yang produktif atau olahraga.", points: ["uus", "eka"] }
+                ]
+            },
+            {
+                q: "Bagaimana caramu menghadapi pekerjaan atau tugas sekolah?",
+                options: [
+                    { text: "Dikerjakan sambil diselingi bercanda supaya tidak stres.", points: ["adi"] },
+                    { text: "Nanti saja kalau sudah mepet deadline.", points: ["iqbal", "onar"] },
+                    { text: "Langsung dikerjakan sesuai jadwal supaya tenang.", points: ["uus", "eka"] }
+                ]
+            },
+            {
+                q: "Temanmu sedang kesulitan uang, apa yang kamu lakukan?",
+                options: [
+                    { text: "Langsung bantu sebisa mungkin karena peduli.", points: ["adi"] },
+                    { text: "Pura-pura tidak tahu atau bilang sedang tidak ada uang.", points: ["iqbal"] },
+                    { text: "Bantu sewajarnya saja kalau memang sudah kenal lama.", points: ["uus", "eka"] }
+                ]
+            },
+            {
+                q: "Apa hal yang paling tidak bisa kamu tinggalkan dalam sehari?",
+                options: [
+                    { text: "Ngobrol atau berinteraksi dengan orang lain.", points: ["adi"] },
+                    { text: "Menikmati waktu sendirian tanpa gangguan.", points: ["iqbal"] },
+                    { text: "Kebiasaan tertentu (seperti kopi/rokok) agar tetap fokus.", points: ["eka", "uus"] }
+                ]
+            },
+            {
+                q: "Bagaimana sikapmu saat masuk ke lingkungan baru?",
+                options: [
+                    { text: "Langsung menyapa orang-orang dan gampang akrab.", points: ["adi", "onar"] },
+                    { text: "Diam saja di pojokan sampai ada yang mengajak bicara.", points: ["iqbal"] },
+                    { text: "Bersikap sopan dan mengikuti alur yang ada saja.", points: ["uus"] }
+                ]
+            },
+            {
+                q: "Apa pendapatmu tentang mencoba hal yang ekstrem atau menantang?",
+                options: [
+                    { text: "Seru kalau dilakukan bareng teman-teman.", points: ["adi"] },
+                    { text: "Malas, lebih baik di zona nyaman yang sudah pasti.", points: ["iqbal", "uus"] },
+                    { text: "Sangat suka! Hidup harus penuh gebrakan.", points: ["onar"] }
+                ]
+            },
+            {
+                q: "Jika ada peraturan di kantor atau sekolah, kamu biasanya...",
+                options: [
+                    { text: "Mengikuti saja sambil sesekali bercanda.", points: ["adi"] },
+                    { text: "Sering melanggar diam-diam kalau tidak menguntungkan.", points: ["onar", "iqbal"] },
+                    { text: "Taat sepenuhnya, hidup harus lurus-lurus saja.", points: ["uus", "eka"] }
+                ]
+            },
+            {
+                q: "Bagaimana caramu mengelola keuangan?",
+                options: [
+                    { text: "Sering habis untuk traktir atau jajan bareng teman.", points: ["adi"] },
+                    { text: "Disimpan rapat-rapat, sangat perhitungan.", points: ["iqbal"] },
+                    { text: "Alokasi untuk kebutuhan pokok dan tabungan teratur.", points: ["uus", "eka"] }
+                ]
+            },
+            {
+                q: "Apa yang kamu lakukan jika suasana sedang sepi dan membosankan?",
+                options: [
+                    { text: "Melempar jokes receh supaya suasana pecah.", points: ["adi"] },
+                    { text: "Menikmati kesunyian itu sendirian.", points: ["iqbal", "eka"] },
+                    { text: "Iseng melakukan sesuatu yang bikin kaget/heboh.", points: ["onar"] }
+                ]
+            },
+            {
+                q: "Deskripsi diri yang paling cocok untukmu adalah...",
+                options: [
+                    { text: "Perhatian dan sayang dengan lingkaran pertemanan.", points: ["adi"] },
+                    { text: "Pekerja keras tapi punya sisi tak bisa diganggu.", points: ["eka"] },
+                    { text: "Orangnya normal-normal saja, tidak suka neko-neko.", points: ["uus"] }
+                ]
+            },
+            {
+                q: "Bagaimana caramu memandang sebuah kesuksesan?",
+                options: [
+                    { text: "Sukses itu kalau bisa bermanfaat dan bikin orang senang.", points: ["adi"] },
+                    { text: "Sukses itu punya banyak harta meski dinikmati sendiri.", points: ["iqbal"] },
+                    { text: "Sukses itu hasil dari kerja keras yang konsisten.", points: ["eka", "uus"] }
+                ]
+            },
+            {
+                q: "Apa reaksi orang saat melihat tingkah lakumu?",
+                options: [
+                    { text: "Orangnya asik banget dan ramah ya!", points: ["adi"] },
+                    { text: "Kadang bikin kesal karena kelakuannya aneh-aneh.", points: ["onar", "iqbal"] },
+                    { text: "Orangnya rajin dan hidupnya tertata.", points: ["uus", "eka"] }
+                ]
+            }
+        ];
+
+        // --- STATE VARIABLES ---
+        let currentQuestionIndex = 0;
+        let scores = { adi: 0, iqbal: 0, uus: 0, eka: 0, onar: 0 };
+        let userName = "";
+
+        // --- FUNCTIONS ---
+
+        function startQuiz() {
+            const nameInput = document.getElementById('username');
+            if (nameInput.value.trim() === "") {
+                alert("Harap masukkan nama kamu dulu ya!");
+                return;
+            }
+            userName = nameInput.value.trim();
+            
+            // Pindah halaman
+            document.getElementById('start-page').classList.add('hidden');
+            document.getElementById('quiz-page').classList.remove('hidden');
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestionIndex];
+            
+            // Update UI Progress
+            document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
+            const percentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${percentage}%`;
+
+            // Set Text
+            document.getElementById('question-text').innerText = q.q;
+
+            // Generate Buttons
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = "";
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition duration-200 flex items-start gap-3 group";
+                
+                const letter = String.fromCharCode(97 + index); // a, b, c
+                
+                btn.innerHTML = `
+                    <div class="bg-gray-100 text-gray-500 font-bold w-8 h-8 flex items-center justify-center rounded-full group-hover:bg-blue-500 group-hover:text-white transition shrink-0 uppercase">
+                        ${letter}
+                    </div>
+                    <span class="text-gray-700 font-medium pt-1">${opt.text}</span>
+                `;
+                
+                btn.onclick = () => handleAnswer(opt.points);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(pointsArr) {
+            // Add points
+            pointsArr.forEach(char => {
+                if (scores[char] !== undefined) {
+                    scores[char]++;
+                }
+            });
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                calculateAndShowResult();
+            }
+        }
+
+        function calculateAndShowResult() {
+            // Find max score
+            let maxScore = -1;
+            let resultChar = "adi"; // Default
+
+            // Simple loop to find max
+            for (const [char, score] of Object.entries(scores)) {
+                if (score > maxScore) {
+                    maxScore = score;
+                    resultChar = char;
+                } else if (score === maxScore) {
+                    // Tie-breaker: prioritization logic (optional)
+                    // For now, first one stays or specific priority:
+                    // Priority: Onar > Adi > Iqbal > Eka > Uus (Random priority for drama)
+                    if (char === 'onar') resultChar = char;
+                }
+            }
+
+            const data = characters[resultChar];
+
+            // Render Result
+            document.getElementById('quiz-page').classList.add('hidden');
+            document.getElementById('result-page').classList.remove('hidden');
+
+            document.getElementById('result-title').innerText = `${userName} adalah ${data.name}`;
+            document.getElementById('result-badge').innerText = data.title;
+            document.getElementById('result-desc').innerText = data.desc;
+            document.getElementById('match-text').innerText = data.matches;
+            document.getElementById('mismatch-text').innerText = data.mismatches;
+
+            // Render Traits Badges
+            const traitsContainer = document.getElementById('result-traits');
+            traitsContainer.innerHTML = "";
+            data.traits.forEach(trait => {
+                const span = document.createElement('span');
+                span.className = "bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-blue-200";
+                span.innerText = trait;
+                traitsContainer.appendChild(span);
+            });
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            scores = { adi: 0, iqbal: 0, uus: 0, eka: 0, onar: 0 };
+            document.getElementById('result-page').classList.add('hidden');
+            document.getElementById('start-page').classList.remove('hidden');
+            document.getElementById('username').value = "";
+        }
+
+        function shareResult() {
+            const text = document.getElementById('result-title').innerText;
+            const desc = document.getElementById('result-badge').innerText;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Hasil Kuis Karakter',
+                    text: `Ternyata ${text} (${desc}). Cek tipe karakter kamu di sini!`,
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                // Fallback copy to clipboard
+                const dummy = document.createElement('textarea');
+                dummy.value = `Saya baru saja ikut kuis karakter. ${text}!`;
+                document.body.appendChild(dummy);
+                dummy.select();
+                document.execCommand('copy');
+                document.body.removeChild(dummy);
+                alert("Link dan hasil telah disalin ke clipboard!");
+            }
+        }
+
+        function downloadResult() {
+            const element = document.getElementById("result-card");
+            
+            // Feedback visual button loading
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "Memproses...";
+            btn.disabled = true;
+
+            html2canvas(element, {
+                scale: 2, // Meningkatkan resolusi
+                backgroundColor: null, // Transparent background (handled by CSS)
+                useCORS: true
+            }).then(canvas => {
+                // Convert canvas to image
+                const link = document.createElement("a");
+                link.download = `Hasil-Kuis-${userName}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+
+                // Restore button
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }).catch(err => {
+                console.error(err);
+                alert("Gagal menyimpan gambar. Coba lagi nanti.");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>

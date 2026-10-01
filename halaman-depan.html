@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Sekawan vs Setan</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f5f5f5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 60px 40px;
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
+
+    /* KIRI */
+    .left {
+      flex: 1;
+    }
+
+    .left h1 {
+      font-size: 32px;
+      color: #0a2c5d;
+      margin-bottom: 10px;
+    }
+
+    .logo {
+      font-size: 48px;
+      font-weight: bold;
+      background: linear-gradient(90deg, #ff6a00, #9c27b0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .left p {
+      color: #555;
+      line-height: 1.6;
+      max-width: 420px;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      background: linear-gradient(90deg, #df5986, #e4ee60);
+      color: #fff;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    /* KANAN */
+    .right {
+      flex: 1;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .box {
+      aspect-ratio: 3 / 4;
+      border-radius: 10px;
+    }
+
+    /* WARNA-WARNI */
+    .c1 { background: #f06292; }
+    .c2 { background: #ba68c8; }
+    .c3 { background: #4db6ac; }
+    .c4 { background: #64b5f6; }
+    .c5 { background: #ffb74d; }
+    .c6 { background: #81c784; }
+    .c7 { background: #ffd54f; }
+    .c8 { background: #90a4ae; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .container {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .left p {
+        margin: auto;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="left">
+      <h1>SIAPAKAH<br>KAMU DI FILM</h1>
+      <div class="logo">SEKAWAN VS SETAN</div>
+      <p>
+        Temukan kembaranmu melalui karakter-karakter ikonik
+        dalam film yang akan mengaduk-aduk perutmu.
+      </p>
+
+      <!-- BUTTON LINK -->
+      <a href="https://filmsekawansetan.com/quiz"
+         class="btn">
+        Ikutan tesnya, yuk!
+      </a>
+    </div>
+
+    <div class="right">
+      <div class="grid">
+        <div class="box c1"></div>
+        <div class="box c2"></div>
+        <div class="box c3"></div>
+        <div class="box c4"></div>
+        <div class="box c5"></div>
+        <div class="box c6"></div>
+        <div class="box c7"></div>
+        <div class="box c8"></div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

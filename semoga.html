@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Kepribadian: Siapa Kamu?</title>
+    <!-- Menggunakan Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas untuk simpan gambar -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Font Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Font khusus untuk Judul Karakter */
+        .char-title {
+            font-weight: 900;
+            line-height: 0.85;
+            letter-spacing: -1px;
+        }
+
+        /* Styling khusus untuk Download Card agar tidak terlihat di layar tapi tetap ter-render */
+        #hidden-download-card {
+            position: fixed;
+            left: -9999px;
+            top: 0;
+            width: 540px; /* Lebar fixed untuk kualitas HD */
+            height: 960px; /* Rasio 9:16 */
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+
+    <div class="w-full max-w-[380px] lg:max-w-[900px]">
+
+        <!-- HALAMAN 1 -->
+        <div id="start-page" class="bg-white rounded-2xl shadow-xl p-6 text-center fade-in">
+            <h1 class="text-xl font-black text-gray-800 mb-1">SEKAWAN SIAPAKAH KAMU?</h1>
+            <p class="text-gray-500 mb-6 text-xs">Yang bohong, jadi setannya!</p>
+            
+            <div class="mb-5 text-left">
+                <label class="block text-xs font-bold uppercase text-gray-400 mb-2 tracking-wider">
+                    Nama Kamu
+                </label>
+                <input type="text" id="username" placeholder="Ketik nama..." 
+                    class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-pink-400 outline-none font-bold text-gray-700">
+            </div>
+
+            <button onclick="startQuiz()" 
+                class="w-full bg-gradient-to-r from-pink-500 to-yellow-500 text-white font-black py-3 rounded-xl shadow-lg uppercase tracking-wider hover:scale-[1.02] transition">
+                Mulai
+            </button>
+        </div>
+
+
+        <!-- HALAMAN 2 -->
+        <div id="quiz-page" class="bg-white rounded-2xl shadow-xl p-6 hidden fade-in">
+
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-xs font-bold text-pink-500 bg-pink-50 px-3 py-1 rounded-full">
+                    Pertanyaan <span id="current-q-num">1</span>/10
+                </span>
+
+                <div class="h-2 w-24 bg-gray-100 rounded-full overflow-hidden">
+                    <div id="progress-bar"
+                        class="h-full bg-gradient-to-r from-pink-500 to-yellow-500 transition-all"
+                        style="width: 8%">
+                    </div>
+                </div>
+            </div>
+
+            <!-- FIXED HEIGHT BIAR GA LONCAT -->
+            <h2 id="question-text"
+                class="text-sm font-bold text-gray-800 mb-5 leading-relaxed min-h-[72px] flex items-center">
+                Loading...
+            </h2>
+
+            <div id="options-container" class="space-y-3">
+                <!-- Options injected JS -->
+            </div>
+
+        </div>
+
+
+        <!-- HALAMAN 3 -->
+        <div id="result-page" class="hidden fade-in flex flex-col items-center">
+
+            <div id="result-card-display"
+                class="bg-white rounded-3xl shadow-2xl overflow-hidden w-full
+                    lg:flex lg:min-h-[480px] transition-all duration-500 ease-out">
+
+                <!-- LEFT: IMAGE -->
+                <div class="relative bg-gradient-to-b from-[#FFA7D1] to-[#E3E856]
+                            h-[300px] lg:h-auto lg:w-1/2">
+
+                    <div class="absolute top-6 left-1/2 -translate-x-1/2
+                                flex flex-col items-center text-center z-20">
+                        <p class="text-white text-[10px] font-black tracking-[0.25em] uppercase mb-1">
+                            <span id="display-username">NAMA</span>, KAMU ADALAH
+                        </p>
+
+                        <h1 id="display-char-name"
+                            class="text-white text-[64px] lg:text-[88px]
+                                font-black leading-[0.85] tracking-tighter uppercase">
+                            TOKOH
+                        </h1>
+                    </div>
+
+                    <img id="display-img"
+                        src=""
+                        class="absolute bottom-0 left-1/2 -translate-x-1/2
+                            h-[240px] lg:h-[420px]
+                            object-contain drop-shadow-xl">
+                </div>
+
+                <!-- RIGHT: CONTENT -->
+                <div class="p-6 lg:p-8 lg:w-1/2 flex flex-col justify-center">
+
+                    <p id="display-desc"
+                    class="text-sm leading-relaxed mb-4 text-center">
+                        Deskripsi karakter...
+                    </p>
+
+                    <div class="bg-blue-50 p-4 rounded-xl text-left mb-4">
+                        <h3 class="text-xs font-bold text-blue-800 mb-2 uppercase">
+                            Sifat-sifatmu
+                        </h3>
+
+                        <ul id="display-traits"
+                            class="text-sm text-gray-700 list-disc list-inside space-y-1">
+                        </ul>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <div class="bg-green-100 text-green-800 p-3 rounded-lg">
+                            <span class="font-bold block">Cocok:</span>
+                            <span id="display-match">...</span>
+                        </div>
+
+                        <div class="bg-red-100 text-red-800 p-3 rounded-lg">
+                            <span class="font-bold block">Ga Cocok:</span>
+                            <span id="display-mismatch">...</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- BUTTON STACK VERTICAL -->
+            <div class="mt-5 w-full space-y-3">
+                <button onclick="downloadResult()"
+                    class="w-full bg-gray-900 text-white font-bold py-3 rounded-lg shadow hover:bg-black transition">
+                    Simpan Gambar
+                </button>
+
+                <button onclick="shareResult()"
+                    class="w-full bg-blue-100 text-blue-700 font-bold py-3 rounded-lg hover:bg-blue-200 transition">
+                    Bagikan
+                </button>
+
+                <button onclick="restartQuiz()"
+                    class="w-full bg-white border border-gray-300 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-50 transition">
+                    Ulangi
+                </button>
+
+                <button onclick="toggleDownloadPreview()"
+                    class="w-full bg-blue-50 text-blue-700 font-bold py-3 rounded-lg hover:bg-blue-100 transition">
+                    👁 Preview Desain Download
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- TEMPLATE DOWNLOAD (HIDDEN) -->
+    <!-- Ini desain khusus download 9:16 mirip "Gambar 2" -->
+    <div id="hidden-download-card" class="bg-white flex flex-col">
+        
+        <!-- BAGIAN FOTO -->
+        <div class="h-[55%] relative bg-gradient-to-b from-[#FFA7D1] via-[#FFA7D1] to-[#E3E856] overflow-hidden">
+            <!-- Logo Pojok Kanan Atas (Simulasi) -->
+            <div class="absolute top-8 right-8 text-right z-30">
+                <h2 class="text-white text-3xl font-black leading-none drop-shadow-md transform -rotate-2">
+                    SEKAWAN<br><span class="text-4xl">VS SETAN</span>
+                </h2>
+            </div>
+
+            <div class="absolute inset-0 flex items-end">
+                <!-- Foto Karakter (Kiri) -->
+                <div class="w-1/2 h-full flex items-end justify-center relative z-10">
+                    <img id="dl-img" src="" class="h-[90%] object-contain drop-shadow-2xl -ml-8">
+                </div>
+                
+                <!-- Teks Nama (Kanan) -->
+                <div class="w-1/2 h-full flex flex-col justify-center items-start pl-2 pr-4 relative z-20 pb-10">
+                    <p class="text-white text-xl font-bold uppercase tracking-widest drop-shadow-sm mb-2 text-right w-full">
+                        <span id="dl-username">NAMA</span>,KAMU ADALAH
+                    </p>
+                    <h1 id="dl-char-name" class="text-white text-[90px] font-black leading-none uppercase drop-shadow-lg text-right w-full char-title">
+                        TOKOH
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- DESKRIPSI (Biru) -->
+        <div class="flex-1 bg-[#72ACE0] p-10 flex gap-8 items-center">
+            <!-- Deskripsi -->
+            <div class="w-[45%] border-r-2 border-white/40 pr-8 flex items-center">
+                <p id="dl-desc" class="text-white text-lg font-medium leading-relaxed text-right">
+                    Deskripsi disini...
+                </p>
+            </div>
+            <!-- Sifat -->
+            <div class="w-[55%] pl-2">
+                <h3 class="text-white text-xl font-bold mb-4 uppercase opacity-90">Sifat-sifatmu:</h3>
+                <ul id="dl-traits" class="text-white text-lg font-medium space-y-2 list-disc list-outside ml-5">
+                    <!-- List items -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Warna warni -->
+        <div class="h-[15%] flex flex-col">
+            <!-- Paling Cocok -->
+            <div class="flex-1 bg-[#EA9E2E] flex items-center justify-center gap-4 py-3 px-6">
+                <span class="text-white text-2xl font-medium">Paling Cocok Sama:</span>
+                <span id="dl-match" class="text-white text-3xl font-black uppercase tracking-wide">...</span>
+            </div>
+            
+            <!-- Kurang Cocok -->
+            <div class="flex-1 bg-[#D94632] flex items-center justify-center gap-4 px-8">
+                <span class="text-white text-2xl font-bold uppercase">Kurang Cocok Sama:</span>
+                <span id="dl-mismatch" class="text-white text-3xl font-black uppercase tracking-wide">...</span>
+            </div>
+            <!-- Paling Bawah -->
+            <div class="h-12 bg-[#599E52] flex items-center justify-center">
+                <p class="text-white text-xl font-bold tracking-[0.3em] uppercase">
+                    SEKAWAN VS SETAN
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEMPLATE DOWNLOAD (HIDDEN) -->
+    <!-- Ini desain khusus download 9:16 mirip "Gambar 2" -->
+    <div id="hidden-download-card" class="bg-white flex flex-col">
+        
+        <!-- BAGIAN 1: HEADER (Gradient, Foto Kiri, Teks Kanan) -->
+        <div class="h-[55%] relative bg-gradient-to-b from-[#FFA7D1] via-[#FFA7D1] to-[#E3E856] overflow-hidden">
+            <!-- Logo Pojok Kanan Atas (Simulasi) -->
+            <div class="absolute top-8 right-8 text-right z-30">
+                <h2 class="text-white text-3xl font-black leading-none drop-shadow-md transform -rotate-2">
+                    SEKAWAN<br><span class="text-4xl">vs SETAN</span>
+                </h2>
+            </div>
+
+            <div class="absolute inset-0 flex items-end">
+                <!-- Foto Karakter (Kiri) -->
+                <div class="w-1/2 h-full flex items-end justify-center relative z-10">
+                    <img id="dl-img" src="" class="h-[90%] object-contain drop-shadow-2xl -ml-8">
+                </div>
+                
+                <!-- Teks Nama (Kanan) -->
+                <div class="w-1/2 h-full flex flex-col justify-center items-start pl-2 pr-4 relative z-20 pb-10">
+                    <p class="text-white text-xl font-bold uppercase tracking-widest drop-shadow-sm mb-2 text-right w-full">
+                        <span id="dl-username">NAMA</span>,<br>KAMU ADALAH
+                    </p>
+                    <h1 id="dl-char-name" class="text-white text-[90px] font-black leading-none uppercase drop-shadow-lg text-right w-full char-title">
+                        TOKOH
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+    <!-- AUDIO -->
+    <audio
+        id="bgm"
+        src="https://fibersky.id/wp-content/uploads/2026/02/babyshark.mp3"
+        loop
+    ></audio>
+
+    <!-- MUSIC TOGGLE -->
+    <img
+        id="musicToggle"
+        src="https://fibersky.id/wp-content/uploads/2026/02/image-M3Br5qPsOkXmks1G9QnEfn7KyHkgtO.png"
+        alt="Music Toggle"
+        onclick="toggleMusic()"
+        style="
+            position:fixed;
+            bottom:20px;
+            right:20px;
+            width:40px;
+            height:40px;
+            cursor:pointer;
+            z-index:9999;
+    "
+    />
+
+    <script>
+        const audio = document.getElementById('bgm');
+        const btn = document.getElementById('musicToggle');
+
+        function toggleMusic() {
+            if (audio.paused) {
+            audio.volume = 0.3;
+            audio.play();
+            audio.muted = false;
+            btn.src = 'https://fibersky.id/wp-content/uploads/2026/02/image-M3Br5qPsOkXmks1G9QnEfn7KyHkgtO.png';
+            } else {
+            audio.pause();
+            btn.src = 'https://fibersky.id/wp-content/uploads/2026/02/pngimg.com-sound_PNG17.png'; 
+            }
+        }
+
+
+        // --- DATA KARAKTER ---
+        const characters = {
+            komang: {
+                name: "Komang",
+                desc: "Kamu tipe orang yang selalu mikirin perasaan orang lain duluan. Rendah hati, sabar, dan hampir nggak pernah bikin suasana panas. Kadang terlalu baik sampai lupa sama diri sendiri",
+                traits: [
+                    "Perhatian sampai kadang lupa sama diri sendiri",
+                    "Anti ngomong enggak alias people pleaser",
+                    "Rendah hati dan ga suka pamer",
+                    "Sabar ngadepin apa aja masalahnya",
+                    "Baik tanpa banyak drama"
+                ],
+                matches: "Johan",
+                mismatches: "Yosef",
+                imgSeed: "Felix" 
+            },
+            feng: {
+                name: "Feng",
+                desc: "Percaya diri, tegas, dan punya aura pemimpin. Kamu tau apa yang kamu mau dengan prinsip yang kuat.",
+                traits: [
+                    "Punya jiwa percaya diri yang too much",
+                    "Jiwa pemimpinnya ngalahin presiden",
+                    "Manchester United garis keras",
+                    "Tegas dan jujur"
+                ],
+                matches: "Yusuf",
+                mismatches: "Johan",
+                imgSeed: "Aneka"
+            },
+            yusuf: {
+                name: "Yusuf",
+                desc: "Kalau bisa mudah kenapa harus dibuat ribet adalah prinsip yang kamu pegang. Untuk menjaga suasana tetap damai kamu akan bertindak realistis, ngalah.",
+                traits: [
+                    "Skeptis tapi masih logis?",
+                    "Suka banget mendam perasaan",
+                    "Simple aja gamau dibuat ribet",
+                    "Ngalahan jadi orang"
+                ],
+                matches: "Feng",
+                mismatches: "Yosef",
+                imgSeed: "Brian"
+            },
+            yosef: {
+                name: "Yosef",
+                desc: "Nama tengahmu adalah 'Chaos'. Kamu suka hal baru, nekat, dan selalu punya ide gila yang bikin tongkrongan jadi pecah. Tanpamu, rasanya ada yang kurang.",
+                traits: [
+                    "Jahil ga kenal waktu",
+                    "Semua orang juga kamu kenal, extrovert parah",
+                    "Kreatif kalau soal ide gila",
+                    "Sipaling gas apapun kondisinya"
+                ],
+                matches: "Feng",
+                mismatches: "Komang",
+                imgSeed: "Christopher"
+            },
+            johan: {
+                name: "Johan",
+                desc: "Kamu penakut tapi tulus, lugu, penurut, dan berhati lembut. Fix anak bungsunya tongkrongan. Lebih suka jadi penonton daripada jadi pemeran utama.",
+                traits: [
+                    "Ga enakan banget jadi orang",
+                    "Penakut tapi baik",
+                    "Lebih sayang binatang daripada diri sendiri",
+                    "Dor dor! Pecinta film action",
+                    "Polos dan paling lugu"
+                ],
+                matches: "Komang",
+                mismatches: "Feng",
+                imgSeed: "Trouble"
+            }
+        };
+
+        // --- DATA PERTANYAAN ---
+        const questions = [
+            {
+                q: "Pas lagi bokek parah di akhir bulan, kamu tipe yang..",
+                options: [
+                    { text: "Masak mie instan sebungkus, airnya dibanyakin biar kenyang", points: ["komang", "johan", "yusuf"] },
+                    { text: "Cari pinjaman ke teman atau nekat makan dulu bayar belakangan", points: ["feng", "yosef"] }
+                ]
+            },
+            {
+                q: "Melihat tumpukan baju kotor di pojok kamar yang sudah mulai bau..",
+                options: [
+                    { text: "Langsung nyuci hari itu juga", points: ["feng", "komang"] },
+                    { text: "Tunggu sampai stok baju bersih habis", points: ["yusuf", "yosef", "johan"] }
+                ]
+            },
+            {
+                q: "Kalau lagi ada teman-teman kos ngumpul di ruang tengah kamu bakal.. ",
+                options: [
+                    { text: "Ikut nimbrung", points: ["yosef", "feng"] },
+                    { text: "Nyapa bentar terus balik ke kamar", points: ["yusuf", "komang", "johan"] }
+                ]
+            },
+            {
+                q: "Kalau mau keluar kamar sebentar..",
+                options: [
+                    { text: "Selalu kunci pintu rapat", points: ["johan", "yusuf"] },
+                    { text: "Biarin kebuka aja", points: ["yosef", "feng", "komang"] }
+                ]
+            },
+            {
+                q: "Ibu Kos datang marah-marah nagih uang sewa yang nunggak..",
+                options: [
+                    { text: "Pura-pura gak ada di kamar", points: ["johan", "yusuf", "komang"] },
+                    { text: "Maju paling depan buat nego", points: ["feng", "yosef"] }
+                ]
+            },
+            {
+                q: "Kalau ada teman mau pinjam barang kesayanganmu, kamu bakal..",
+                options: [
+                    { text: "Kasih pinjam aja", points: ["komang", "johan", "yosef"] },
+                    { text: "Bilang kalau lagi dipake", points: ["feng", "yusuf"] }
+                ]
+            },
+            {
+                q: "Cara terbaik menghabiskan waktu luang menurutmu?",
+                options: [
+                    { text: "Maraton nonton film", points: ["johan", "yosef", "feng"] },
+                    { text: "Baca-baca hal yang lagi viral di sosmed", points: ["Yusuf", "Komang"] }
+                ]
+            },
+            {
+                q: "Kalau tiba-tiba ada suara tangisan di kamar mandi pas mati lampu..",
+                options: [
+                    { text: "Langsung lari keluar kosan sambil teriak minta tolong", points: ["johan", "komang"] },
+                    { text: "Ambil senter dan cek sumber suaranya", points: ["feng", "yusuf", "yosef"] }
+                ]
+            },
+            {
+                q: "Sabun mandi atau makananmu di kulkas sering hilang secara misterius.. ",
+                options: [
+                    { text: "Ikhlasin aja", points: ["komang", "yusuf", "johan"] },
+                    { text: "Cari pencurinya", points: ["feng", "yosef"] }
+                ]
+            },
+            {
+                q: "Kalau diusir dari kosan hari ini juga, kamu bakal..",
+                options: [
+                    { text: "Numpang di kamar teman secara diam-diam sampai dapat kos baru", points: ["komang", "johan", "yusuf"] },
+                    { text: "Cari cara gila (kayak pesugihan) biar dapat duit instan", points: ["yosef", "feng"] }
+                ]
+            },
+        ];
+
+        let currentQuestionIndex = 0;
+        let scores = { komang: 0, feng: 0, yusuf: 0, yosef: 0, johan: 0 };
+        let userName = "";
+
+        function startQuiz() {
+            const nameInput = document.getElementById('username');
+            if (nameInput.value.trim() === "") {
+                alert("Isi nama dulu dong!");
+                return;
+            }
+            userName = nameInput.value.trim();
+            document.getElementById('start-page').classList.add('hidden');
+            document.getElementById('quiz-page').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestionIndex];
+            document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
+            document.getElementById('progress-bar').style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+            document.getElementById('question-text').innerText = q.q;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = "";
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-gray-100 bg-gray-50 hover:bg-pink-50 hover:border-pink-300 transition duration-200 flex items-center gap-3 group";
+                btn.innerHTML = `
+                    <div class="bg-white border text-gray-400 font-bold w-8 h-8 flex items-center justify-center rounded-lg group-hover:bg-pink-400 group-hover:text-white transition shrink-0 text-sm">
+                        ${String.fromCharCode(65 + index)}
+                    </div>
+                    <span class="text-gray-700 font-medium text-xs group-hover:text-pink-600">${opt.text}</span>
+                `;
+                btn.onclick = () => handleAnswer(opt.points);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(pointsArr) {
+            pointsArr.forEach(char => scores[char] = (scores[char] || 0) + 1);
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) loadQuestion();
+            else showResult();
+        }
+
+        function showResult() {
+            let maxScore = -1, resultChar = "komang";
+            for (const [char, score] of Object.entries(scores)) {
+                if (score > maxScore) { maxScore = score; resultChar = char; }
+            }
+            const data = characters[resultChar];
+            const imgUrl = `https://api.dicebear.com/9.x/avataaars/svg?seed=${data.imgSeed}&backgroundColor=transparent`;
+
+            document.getElementById('quiz-page').classList.add('hidden');
+            document.getElementById('result-page').classList.remove('hidden');
+
+            // --- ISI DATA UNTUK TAMPILAN DISPLAY (UI) ---
+            document.getElementById('display-username').innerText = userName;
+            document.getElementById('display-char-name').innerText = data.name;
+            document.getElementById('display-desc').innerText = data.desc;
+            document.getElementById('display-match').innerText = data.matches;
+            document.getElementById('display-mismatch').innerText = data.mismatches;
+            document.getElementById('display-img').src = imgUrl;
+            
+            const displayList = document.getElementById('display-traits');
+            displayList.innerHTML = data.traits.map(t => `<li>${t}</li>`).join('');
+
+
+            // --- ISI DATA UNTUK TEMPLATE DOWNLOAD (HIDDEN) ---
+            document.getElementById('dl-username').innerText = userName;
+            document.getElementById('dl-char-name').innerText = data.name;
+            document.getElementById('dl-desc').innerText = data.desc;
+            document.getElementById('dl-match').innerText = data.matches;
+            document.getElementById('dl-mismatch').innerText = data.mismatches;
+            document.getElementById('dl-img').src = imgUrl;
+
+            const dlList = document.getElementById('dl-traits');
+            dlList.innerHTML = data.traits.map(t => `<li>${t}</li>`).join('');
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            scores = { komang: 0, feng: 0, yusuf: 0, yosef: 0, johan: 0 };
+            document.getElementById('result-page').classList.add('hidden');
+            document.getElementById('start-page').classList.remove('hidden');
+            document.getElementById('username').value = "";
+        }
+
+        async function shareResult() {
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "Memproses...";
+            btn.disabled = true;
+
+            const el = document.getElementById("hidden-download-card");
+
+            try {
+                // 1. Generate Gambar dari Card Tersembunyi (Desain Download)
+                const canvas = await html2canvas(el, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: null
+                });
+
+                // 2. Convert Canvas ke Blob (File Object)
+                canvas.toBlob(async (blob) => {
+                    if (!blob) {
+                        alert("Gagal memproses gambar.");
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        return;
+                    }
+
+                    // 3. Buat File dari Blob
+                    const file = new File([blob], `Kuis-Karakter-${userName}.png`, { type: "image/png" });
+                    const shareData = {
+                        files: [file],
+                        title: 'Hasil Kuis Karakter',
+                        text: `Aku dapet ${document.getElementById('dl-char-name').innerText}! Cek tipe karakter kamu di sini:`
+                    };
+
+                    // 4. Cek apakah Browser mendukung Share File
+                    if (navigator.canShare && navigator.canShare(shareData)) {
+                        try {
+                            await navigator.share(shareData);
+                            // Berhasil membuka dialog share (WA/IG dll)
+                        } catch (err) {
+                            console.log("Share dibatalkan user atau error:", err);
+                        }
+                    } else {
+                        // Fallback jika browser tidak support share file (Desktop biasanya)
+                        alert("Browser ini belum support share gambar langsung. Gambar akan diunduh, silakan upload manual ya!");
+                        
+                        // Download manual
+                        const link = document.createElement("a");
+                        link.download = `Hasil-Kuis-${userName}.png`;
+                        link.href = canvas.toDataURL("image/png");
+                        link.click();
+                    }
+                    
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+
+                }, 'image/png');
+
+            } catch (err) {
+                console.error(err);
+                alert("Gagal memproses share. Coba lagi.");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function downloadResult() {
+            // TARGETKAN ELEMENT YANG TERSEMBUNYI
+            const el = document.getElementById("hidden-download-card");
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = "Memproses...";
+            btn.disabled = true;
+            
+            // Tunggu sebentar untuk memastikan render
+            setTimeout(() => {
+                html2canvas(el, { 
+                    scale: 2, // Scale tinggi untuk kualitas bagus
+                    useCORS: true,
+                    backgroundColor: null 
+                }).then(canvas => {
+                    const link = document.createElement("a");
+                    link.download = `Hasil-Kuis-${userName}.png`;
+                    link.href = canvas.toDataURL("image/png");
+                    link.click();
+                    
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }).catch(err => {
+                    console.error(err);
+                    alert("Gagal membuat gambar.");
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                });
+            }, 500);
+        }
+        
+        let isPreviewingDownload = false;
+
+        function toggleDownloadPreview() {
+        const card = document.getElementById("hidden-download-card");
+
+        if (isPreviewingDownload) {
+            // BALIK KE MODE HIDDEN (PRODUCTION MODE)
+            card.style.position = "fixed";
+            card.style.left = "-9999px";
+            card.style.top = "0";
+            card.style.zIndex = "-1";
+            card.style.transform = "";
+            card.style.margin = "";
+            document.body.style.overflow = "";
+            isPreviewingDownload = false;
+        } else {
+            // MODE PREVIEW (DEVELOPER MODE)
+            card.style.position = "relative";
+            card.style.left = "0";
+            card.style.top = "0";
+            card.style.margin = "40px auto";
+            card.style.zIndex = "9999";
+            card.style.transform = "scale(0.8)";
+            card.style.transformOrigin = "top center";
+            document.body.style.overflow = "auto";
+            isPreviewingDownload = true;
+
+            // Scroll otomatis ke preview
+            setTimeout(() => {
+            card.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 100);
+        }
+        }
+    </script>
+</body>
+</html>

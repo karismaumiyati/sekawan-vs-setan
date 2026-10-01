@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Font khusus untuk Judul Karakter */
+        .char-title {
+            font-weight: 900;
+            line-height: 0.85;
+            letter-spacing: -1px;
+        }
+
+        /* Styling khusus untuk Download Card agar tidak terlihat di layar tapi tetap ter-render */
+        #hidden-download-card {
+            position: fixed;
+            left: -9999px;
+            top: 0;
+            width: 540px; /* Lebar fixed untuk kualitas HD */
+            height: 960px; /* Rasio 9:16 */
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+     <div id="hidden-download-card" class="bg-white flex flex-col">
+        
+        <!-- BAGIAN 1: HEADER (Gradient, Foto Kiri, Teks Kanan) -->
+        <div class="h-[55%] relative bg-gradient-to-b from-[#FFA7D1] via-[#FFA7D1] to-[#E3E856] overflow-hidden">
+            <!-- Logo Pojok Kanan Atas (Simulasi) -->
+            <div class="absolute top-8 right-8 text-right z-30">
+                <h2 class="text-white text-3xl font-black leading-none drop-shadow-md transform -rotate-2">
+                    SEKAWAN<br><span class="text-4xl">VS SETAN</span>
+                </h2>
+            </div>
+
+            <div class="absolute inset-0 flex items-end">
+                <!-- Foto Karakter (Kiri) -->
+                <div class="w-1/2 h-full flex items-end justify-center relative z-10">
+                    <img id="dl-img" src="" class="h-[90%] object-contain drop-shadow-2xl -ml-8">
+                </div>
+                
+                <!-- Teks Nama (Kanan) -->
+                <div class="w-1/2 h-full flex flex-col justify-center items-start pl-2 pr-4 relative z-20 pb-10">
+                    <p class="text-white text-xl font-bold uppercase tracking-widest drop-shadow-sm mb-2 text-right w-full">
+                        <span id="dl-username">NAMA</span>,KAMU ADALAH
+                    </p>
+                    <h1 id="dl-char-name" class="text-white text-[90px] font-black leading-none uppercase drop-shadow-lg text-right w-full char-title">
+                        TOKOH
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- BAGIAN 2: DESKRIPSI (Biru) -->
+        <div class="flex-1 bg-[#72ACE0] p-10 flex gap-8 items-center">
+            <!-- Kolom Kiri: Deskripsi -->
+            <div class="w-[45%] border-r-2 border-white/40 pr-8 flex items-center">
+                <p id="dl-desc" class="text-white text-lg font-medium leading-relaxed text-right">
+                    Deskripsi disini...
+                </p>
+            </div>
+            <!-- Kolom Kanan: Sifat -->
+            <div class="w-[55%] pl-2">
+                <h3 class="text-white text-xl font-bold mb-4 uppercase opacity-90">Sifat-sifatmu:</h3>
+                <ul id="dl-traits" class="text-white text-lg font-medium space-y-2 list-disc list-outside ml-5">
+                    <!-- List items -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- BAGIAN 3: FOOTER BARS -->
+        <div class="h-[15%] flex flex-col">
+            <!-- Bar Orange -->
+            <div class="flex-1 bg-[#EA9E2E] flex items-center justify-center gap-4 py-3 px-6">
+                <span class="text-white text-[10px] font-medium">Paling Cocok Sama:</span>
+                <span id="dl-match" class="text-white text-3xl font-black uppercase tracking-wide">...</span>
+            </div>
+            
+            <!-- Bar Merah -->
+            <div class="flex-1 bg-[#D94632] flex items-center justify-center gap-4 px-8">
+                <span class="text-white text-xl font-bold uppercase">Kurang Cocok Sama:</span>
+                <span id="dl-mismatch" class="text-white text-3xl font-black uppercase tracking-wide">...</span>
+            </div>
+            <!-- Footer Hijau -->
+            <div class="h-12 bg-[#599E52] flex items-center justify-center">
+                <p class="text-white text-xs font-bold tracking-[0.3em] uppercase">
+                    Rangga & Cinta Sedang Tayang Di Bioskop
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
